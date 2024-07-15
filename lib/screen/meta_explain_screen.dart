@@ -3,6 +3,7 @@ import 'package:memory_app/screen/register_screen4.dart';
 
 
 import 'components/custom_button.dart';
+import 'remind_question1_screen.dart';
 
 class MetaExplainScreen extends StatefulWidget {
   const MetaExplainScreen({super.key});
@@ -179,7 +180,7 @@ class _MetaExplainScreenState extends State<MetaExplainScreen> {
                   onPressed: () => Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => RegisterScreen4(),
+                        builder: (context) => RemindQuestion1Screen(),
                       )),
                 ),
               ),
