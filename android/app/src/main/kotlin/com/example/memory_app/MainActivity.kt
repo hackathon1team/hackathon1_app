@@ -1,4 +1,4 @@
-package com.example.hackathon1_app
+package com.example.memory_app
 
 import io.flutter.embedding.android.FlutterActivity
 
