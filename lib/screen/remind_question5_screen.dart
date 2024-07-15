@@ -3,6 +3,7 @@ import 'package:memory_app/const/colors.dart';
 import 'package:memory_app/screen/components/custom_progress_bar.dart';
 
 import 'components/custom_button.dart';
+import 'home_screen.dart';
 
 class RemindQuestion5Screen extends StatefulWidget {
   const RemindQuestion5Screen({super.key});
@@ -106,7 +107,7 @@ class _RemindQuestion5ScreenState extends State<RemindQuestion5Screen> {
                 onPressed: () => Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => RemindQuestion5Screen(),
+                      builder: (context) => HomeScreen(),
                     )),
               ),
             ),

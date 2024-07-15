@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:memory_app/screen/register_screen3.dart';
 
-
 import 'components/custom_button.dart';
 import 'components/custom_progress_bar.dart';
 
@@ -13,7 +12,6 @@ class RegisterScreen2 extends StatefulWidget {
 }
 
 class _RegisterScreen2State extends State<RegisterScreen2> {
-
   final TextEditingController nameController = TextEditingController();
 
   @override
@@ -61,7 +59,6 @@ class _RegisterScreen2State extends State<RegisterScreen2> {
                         color: Color(0xFFE7E7E7),
                         fontSize: 22,
                         fontWeight: FontWeight.w600,
-
                       ),
                       enabledBorder: UnderlineInputBorder(
                         borderSide: BorderSide(
@@ -83,19 +80,26 @@ class _RegisterScreen2State extends State<RegisterScreen2> {
             Positioned(
               bottom: 40,
               left: 40,
-              child: CustomButton(text: '이전 질문', right: false, onPressed: () => Navigator.of(context).pop(),),
+              child: CustomButton(
+                text: '이전 질문',
+                right: false,
+                onPressed: () => Navigator.of(context).pop(),
+              ),
             ),
             Positioned(
               bottom: 40,
               right: 40,
-              child: CustomButton(text: '다음 질문', right: true, onPressed: () => Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => RegisterScreen3(),
-                  )),),
+              child: CustomButton(
+                text: '다음 질문',
+                right: true,
+                onPressed: () => Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => RegisterScreen3(),
+                    )),
+              ),
             ),
           ],
-
         ),
       ),
     );
