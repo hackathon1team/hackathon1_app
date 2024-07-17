@@ -1,4 +1,3 @@
-import 'package:data_table_2/data_table_2.dart';
 import 'package:flutter/material.dart';
 import 'package:memory_app/const/emoji.dart';
 
@@ -83,11 +82,11 @@ class _TimeLedgerScreenState extends State<TimeLedgerScreen> {
     final TextStyle _rowStyle = TextStyle(
         fontSize: 16, fontWeight: FontWeight.normal, color: Colors.white);
 
-    return Stack(
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        Positioned(
-          top: 80,
-          left: 40,
+        Padding(
+          padding: EdgeInsets.only(top: 80, left: 40),
           child: Text(
             _selectedDate.month == DateTime.now().month &&
                     _selectedDate.day == DateTime.now().day
@@ -100,138 +99,168 @@ class _TimeLedgerScreenState extends State<TimeLedgerScreen> {
             ),
           ),
         ),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 80),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              SizedBox(
-                height: 10,
-              ),
-              _selectedDate.month != DateTime.now().month ||
-                      _selectedDate.day != DateTime.now().day
-                  ? Align(
-                      alignment: Alignment.centerLeft,
-                      child: ElevatedButton(
-                        onPressed: () {
-                          setState(() {
-                            _selectedDate = DateTime.now();
-                          });
-                        },
-                        child: Text(
-                          '오늘로 돌아가기',
-                          style: TextStyle(
-                            fontSize: 15,
-                            color: Color(0xFFD9AEAE),
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        style: ElevatedButton.styleFrom(
-                          padding: const EdgeInsets.symmetric(horizontal: 20),
-                          backgroundColor: Color(0xFF777DAA),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                          tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                          // 버튼 크기 줄이기
-                          minimumSize: Size(0, 36), // 최소 높이 설정
+        SizedBox(
+          height: 10,
+        ),
+        Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            SizedBox(
+              height: 10,
+            ),
+            _selectedDate.month != DateTime.now().month ||
+                    _selectedDate.day != DateTime.now().day
+                ? Align(
+                    alignment: Alignment.centerLeft,
+                    child: ElevatedButton(
+                      onPressed: () {
+                        setState(() {
+                          _selectedDate = DateTime.now();
+                        });
+                      },
+                      child: Text(
+                        '오늘로 돌아가기',
+                        style: TextStyle(
+                          fontSize: 15,
+                          color: Color(0xFFD9AEAE),
+                          fontWeight: FontWeight.bold,
                         ),
                       ),
-                    )
-                  : Container(),
-              SizedBox(
-                height: 10,
-              ),
-              Expanded(
-                child: Container(
-                  decoration: BoxDecoration(
-                    color: Color(0xFFA1A0CA),
-                    borderRadius: BorderRadius.circular(40),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black.withOpacity(0.25),
-                        offset: Offset(20, 25),
-                        blurRadius: 40,
+                      style: ElevatedButton.styleFrom(
+                        padding: const EdgeInsets.symmetric(horizontal: 20),
+                        backgroundColor: Color(0xFF777DAA),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                        // 버튼 크기 줄이기
+                        minimumSize: Size(0, 36), // 최소 높이 설정
                       ),
-                    ],
-                  ),
-                  child: Column(
-                    children: [
-                      Row(
+                    ),
+                  )
+                : Container(),
+            SizedBox(
+              height: 10,
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16.0),
+              child: Container(
+                height: 300, // 컨테이너의 높이를 고정
+                decoration: BoxDecoration(
+                  color: Color(0xFFA1A0CA),
+                  borderRadius: BorderRadius.circular(40),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.25),
+                      offset: Offset(20, 25),
+                      blurRadius: 40,
+                    ),
+                  ],
+                ),
+                child: Column(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(8.0, 12.0, 8.0, 0.0),
+                      child: Row(
                         children: [
                           Expanded(
                               flex: 2,
                               child: Text(
                                 '감정',
                                 style: _columnStyle,
+                                overflow: TextOverflow.ellipsis,
+                                textAlign: TextAlign.center,
                               )),
                           Expanded(
                               flex: 1,
                               child: Text(
                                 '분류',
                                 style: _columnStyle,
+                                overflow: TextOverflow.ellipsis,
+                                textAlign: TextAlign.center,
                               )),
                           Expanded(
                               flex: 3,
                               child: Text(
                                 '내용',
                                 style: _columnStyle,
+                                overflow: TextOverflow.ellipsis,
+                                textAlign: TextAlign.center,
                               )),
                           Expanded(
                               flex: 2,
                               child: Text(
                                 '시간',
                                 style: _columnStyle,
+                                overflow: TextOverflow.ellipsis,
+                                textAlign: TextAlign.center,
                               )),
                         ],
                       ),
-                      Expanded(
-                          child: ListView.separated(
-                              itemBuilder: (context, index) {
-                                return Row(
-                                  children: [
-                                    Expanded(
-                                      flex: 2,
-                                      child: Text(
-                                        '😲${neutralEmoji['😲']}',
-                                        style: _rowStyle,
-                                      ),
-                                    ),
-                                    Expanded(
-                                      flex: 1,
-                                      child: Text(
-                                        '친구',
-                                        style: _rowStyle,
-                                      ),
-                                    ),
-                                    Expanded(
-                                      flex: 3,
-                                      child: Text(
-                                        '모모 퍼즐 만들기',
-                                        style: _rowStyle,
-                                      ),
-                                    ),
-                                    Expanded(
-                                      flex: 2,
-                                      child: Text(
-                                        '3시간',
-                                        style: _rowStyle,
-                                      ),
-                                    ),
-                                  ],
-                                );
-                              },
-                              separatorBuilder: (context, index) => SizedBox(
-                                    height: 5,
+                    ),
+                    Expanded(
+                      child: ListView.separated(
+                        padding: EdgeInsets.symmetric(vertical: 10),
+                        itemBuilder: (context, index) {
+                          return GestureDetector(
+                            onTap: () {},
+                            child: Row(
+                              children: [
+                                Expanded(
+                                  flex: 2,
+                                  child: Text(
+                                    '😲 ${neutralEmoji['😲']}',
+                                    style: _rowStyle,
+                                    textAlign: TextAlign.center,
+                                    overflow: TextOverflow.ellipsis,
                                   ),
-                              itemCount: 5)),
-                    ],
-                  ),
+                                ),
+                                Expanded(
+                                  flex: 1,
+                                  child: Text(
+                                    '친구',
+                                    style: _rowStyle,
+                                    overflow: TextOverflow.ellipsis,
+                                    textAlign: TextAlign.center,
+                                  ),
+                                ),
+                                Expanded(
+                                  flex: 3,
+                                  child: Text(
+                                    '모모 퍼즐 만들기',
+                                    style: _rowStyle,
+                                    textAlign: TextAlign.center,
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                ),
+                                Expanded(
+                                  flex: 2,
+                                  child: Text(
+                                    '3시간',
+                                    style: _rowStyle,
+                                    overflow: TextOverflow.ellipsis,
+                                    textAlign: TextAlign.center,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          );
+                        },
+                        separatorBuilder: (context, index) => SizedBox(
+                          height: 5,
+                        ),
+                        itemCount: 5,
+                      ),
+                    ),
+                    SizedBox(
+                      height: 20,
+                    ),
+                  ],
                 ),
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ],
     );
@@ -280,14 +309,23 @@ class _TimeLedgerScreenState extends State<TimeLedgerScreen> {
                         context: context,
                         builder: (context) {
                           return Container(
+                            color: Color(0xFFCDCAE2),
                             child: Padding(
-                              padding: const EdgeInsets.all(16.0),
+                              padding: const EdgeInsets.all(32.0),
                               child: Column(
                                 children: [
                                   Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
                                     children: [
                                       Text(
-                                          '${_selectedDate.month}월 ${_selectedDate.day}일 일정 추가'),
+                                        '${_selectedDate.month}월 ${_selectedDate.day}일 일정 추가',
+                                        style: TextStyle(
+                                          fontSize: 21,
+                                          fontWeight: FontWeight.bold,
+                                          color: Color(0xFF5D659E),
+                                        ),
+                                      ),
                                       IconButton(
                                           onPressed: () {},
                                           icon: Icon(Icons.close)),
@@ -300,6 +338,7 @@ class _TimeLedgerScreenState extends State<TimeLedgerScreen> {
                                     children: [
                                       Text(
                                           '감정: 감정을 선택해주세요 or 😲${neutralEmoji['😲']}'),
+                                      Text('감정을 선택해주세요')
                                     ],
                                   ),
                                   Row(
