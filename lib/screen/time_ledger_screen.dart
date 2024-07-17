@@ -1,3 +1,4 @@
+import 'package:data_table_2/data_table_2.dart';
 import 'package:flutter/material.dart';
 import 'package:memory_app/const/emoji.dart';
 
@@ -142,162 +143,91 @@ class _TimeLedgerScreenState extends State<TimeLedgerScreen> {
               SizedBox(
                 height: 10,
               ),
-              Container(
-                decoration: BoxDecoration(
-                  color: Color(0xFFA1A0CA),
-                  borderRadius: BorderRadius.circular(40),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black.withOpacity(0.25),
-                      offset: Offset(20, 25),
-                      blurRadius: 40,
-                    ),
-                  ],
-                ),
-                child: DataTable(
+              Expanded(
+                child: Container(
                   decoration: BoxDecoration(
-                    border: Border.all(color: Colors.transparent),
+                    color: Color(0xFFA1A0CA),
+                    borderRadius: BorderRadius.circular(40),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withOpacity(0.25),
+                        offset: Offset(20, 25),
+                        blurRadius: 40,
+                      ),
+                    ],
                   ),
-                  columns: [
-                    DataColumn(
-                      label: Text(
-                        '감정',
-                        style: _columnStyle,
+                  child: Column(
+                    children: [
+                      Row(
+                        children: [
+                          Expanded(
+                              flex: 2,
+                              child: Text(
+                                '감정',
+                                style: _columnStyle,
+                              )),
+                          Expanded(
+                              flex: 1,
+                              child: Text(
+                                '분류',
+                                style: _columnStyle,
+                              )),
+                          Expanded(
+                              flex: 3,
+                              child: Text(
+                                '내용',
+                                style: _columnStyle,
+                              )),
+                          Expanded(
+                              flex: 2,
+                              child: Text(
+                                '시간',
+                                style: _columnStyle,
+                              )),
+                        ],
                       ),
-                    ),
-                    DataColumn(
-                      label: Text(
-                        '분류',
-                        style: _columnStyle,
-                      ),
-                    ),
-                    DataColumn(
-                      label: Text(
-                        '내용',
-                        style: _columnStyle,
-                      ),
-                    ),
-                    DataColumn(
-                      label: Text(
-                        '시간',
-                        style: _columnStyle,
-                      ),
-                    ),
-                  ],
-                  rows: [
-                    DataRow(
-                      cells: [
-                        DataCell(
-                          Text(
-                            '😲${neutralEmoji['😲']}',
-                            style: _rowStyle,
-                          ),
-                        ),
-                        DataCell(
-                          Text(
-                            '친구',
-                            style: _rowStyle,
-                          ),
-                        ),
-                        DataCell(
-                          Text(
-                            '모모 퍼즐 만들기',
-                            style: _rowStyle,
-                          ),
-                        ),
-                        DataCell(
-                          Text(
-                            '3시간',
-                            style: _rowStyle,
-                          ),
-                        ),
-                      ],
-                    ),
-                    DataRow(
-                      cells: [
-                        DataCell(
-                          Text(
-                            '😲${neutralEmoji['😲']}',
-                            style: _rowStyle,
-                          ),
-                        ),
-                        DataCell(
-                          Text(
-                            '친구',
-                            style: _rowStyle,
-                          ),
-                        ),
-                        DataCell(
-                          Text(
-                            '모모 퍼즐 만들기',
-                            style: _rowStyle,
-                          ),
-                        ),
-                        DataCell(
-                          Text(
-                            '3시간',
-                            style: _rowStyle,
-                          ),
-                        ),
-                      ],
-                    ),
-                    DataRow(
-                      cells: [
-                        DataCell(
-                          Text(
-                            '😲${neutralEmoji['😲']}',
-                            style: _rowStyle,
-                          ),
-                        ),
-                        DataCell(
-                          Text(
-                            '친구',
-                            style: _rowStyle,
-                          ),
-                        ),
-                        DataCell(
-                          Text(
-                            '모모 퍼즐 만들기',
-                            style: _rowStyle,
-                          ),
-                        ),
-                        DataCell(
-                          Text(
-                            '3시간',
-                            style: _rowStyle,
-                          ),
-                        ),
-                      ],
-                    ),
-                    DataRow(
-                      cells: [
-                        DataCell(
-                          Text(
-                            '😲${neutralEmoji['😲']}',
-                            style: _rowStyle,
-                          ),
-                        ),
-                        DataCell(
-                          Text(
-                            '친구',
-                            style: _rowStyle,
-                          ),
-                        ),
-                        DataCell(
-                          Text(
-                            '모모 퍼즐 만들기',
-                            style: _rowStyle,
-                          ),
-                        ),
-                        DataCell(
-                          Text(
-                            '3시간',
-                            style: _rowStyle,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
+                      Expanded(
+                          child: ListView.separated(
+                              itemBuilder: (context, index) {
+                                return Row(
+                                  children: [
+                                    Expanded(
+                                      flex: 2,
+                                      child: Text(
+                                        '😲${neutralEmoji['😲']}',
+                                        style: _rowStyle,
+                                      ),
+                                    ),
+                                    Expanded(
+                                      flex: 1,
+                                      child: Text(
+                                        '친구',
+                                        style: _rowStyle,
+                                      ),
+                                    ),
+                                    Expanded(
+                                      flex: 3,
+                                      child: Text(
+                                        '모모 퍼즐 만들기',
+                                        style: _rowStyle,
+                                      ),
+                                    ),
+                                    Expanded(
+                                      flex: 2,
+                                      child: Text(
+                                        '3시간',
+                                        style: _rowStyle,
+                                      ),
+                                    ),
+                                  ],
+                                );
+                              },
+                              separatorBuilder: (context, index) => SizedBox(
+                                    height: 5,
+                                  ),
+                              itemCount: 5)),
+                    ],
+                  ),
                 ),
               ),
             ],
@@ -345,7 +275,57 @@ class _TimeLedgerScreenState extends State<TimeLedgerScreen> {
                     border: Border.all(color: Colors.white, width: 5),
                   ),
                   child: FloatingActionButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      showModalBottomSheet(
+                        context: context,
+                        builder: (context) {
+                          return Container(
+                            child: Padding(
+                              padding: const EdgeInsets.all(16.0),
+                              child: Column(
+                                children: [
+                                  Row(
+                                    children: [
+                                      Text(
+                                          '${_selectedDate.month}월 ${_selectedDate.day}일 일정 추가'),
+                                      IconButton(
+                                          onPressed: () {},
+                                          icon: Icon(Icons.close)),
+                                    ],
+                                  ),
+                                  SizedBox(
+                                    height: 10,
+                                  ),
+                                  Row(
+                                    children: [
+                                      Text(
+                                          '감정: 감정을 선택해주세요 or 😲${neutralEmoji['😲']}'),
+                                    ],
+                                  ),
+                                  Row(
+                                    children: [
+                                      Text('분류: 분류를 선택해주세요 or 가족'),
+                                    ],
+                                  ),
+                                  Row(
+                                    children: [
+                                      Text('내용: 내용을 작성해주세요'),
+                                    ],
+                                  ),
+                                  Row(
+                                    children: [
+                                      Text('소요시간을 작성해주세요(시간당)'),
+                                    ],
+                                  ),
+                                  ElevatedButton(
+                                      onPressed: () {}, child: Text('추가')),
+                                ],
+                              ),
+                            ),
+                          );
+                        },
+                      );
+                    },
                     backgroundColor: Colors.transparent,
                     foregroundColor: Colors.white,
                     elevation: 0,
