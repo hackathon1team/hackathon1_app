@@ -37,6 +37,7 @@ dependencies:
   cupertino_icons: ^1.0.6
   glassmorphism_ui: ^0.3.0
   data_table_2: ^2.5.15
+  fl_chart: ^0.68.0
 
 dev_dependencies:
   flutter_test:

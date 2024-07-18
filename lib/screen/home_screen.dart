@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:memory_app/screen/components/app_navigation_bar.dart';
+import 'package:memory_app/screen/static_screen.dart';
 
 import 'time_ledger_screen.dart';
 
@@ -14,8 +15,8 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: TimeLedgerScreen(),
-      bottomNavigationBar: AppNavigationBar(currentIndex: 0,),
+      body: StaticScreen(),
+      bottomNavigationBar: AppNavigationBar(currentIndex: 2,),
     );
   }
 }

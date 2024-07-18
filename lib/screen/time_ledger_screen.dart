@@ -1,4 +1,7 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:memory_app/const/category.dart';
+import 'package:memory_app/const/colors.dart';
 import 'package:memory_app/const/emoji.dart';
 
 class TimeLedgerScreen extends StatefulWidget {
@@ -10,8 +13,20 @@ class TimeLedgerScreen extends StatefulWidget {
 
 class _TimeLedgerScreenState extends State<TimeLedgerScreen> {
   bool writed = true;
+  int? selectedHour;
 
   DateTime _selectedDate = DateTime.now();
+  final boldStyle = TextStyle(
+    fontSize: 21,
+    fontWeight: FontWeight.bold,
+    color: Color(0xFF5D659E),
+  );
+
+  final normalStyle = TextStyle(
+    color: Color(0xFF797FAB),
+    fontWeight: FontWeight.normal,
+    fontSize: 16,
+  );
 
   Widget _writeFalse() {
     return Stack(
@@ -111,34 +126,37 @@ class _TimeLedgerScreenState extends State<TimeLedgerScreen> {
             ),
             _selectedDate.month != DateTime.now().month ||
                     _selectedDate.day != DateTime.now().day
-                ? Align(
-                    alignment: Alignment.centerLeft,
-                    child: ElevatedButton(
-                      onPressed: () {
-                        setState(() {
-                          _selectedDate = DateTime.now();
-                        });
-                      },
-                      child: Text(
-                        '오늘로 돌아가기',
-                        style: TextStyle(
-                          fontSize: 15,
-                          color: Color(0xFFD9AEAE),
-                          fontWeight: FontWeight.bold,
+                ? Padding(
+                  padding: const EdgeInsets.only(left: 16.0),
+                  child: Align(
+                      alignment: Alignment.centerLeft,
+                      child: ElevatedButton(
+                        onPressed: () {
+                          setState(() {
+                            _selectedDate = DateTime.now();
+                          });
+                        },
+                        child: Text(
+                          '오늘로 돌아가기',
+                          style: TextStyle(
+                            fontSize: 15,
+                            color: Color(0xFFD9AEAE),
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
-                      ),
-                      style: ElevatedButton.styleFrom(
-                        padding: const EdgeInsets.symmetric(horizontal: 20),
-                        backgroundColor: Color(0xFF777DAA),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10),
+                        style: ElevatedButton.styleFrom(
+                          padding: const EdgeInsets.symmetric(horizontal: 20),
+                          backgroundColor: Color(0xFF777DAA),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                          // 버튼 크기 줄이기
+                          minimumSize: Size(0, 36), // 최소 높이 설정
                         ),
-                        tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                        // 버튼 크기 줄이기
-                        minimumSize: Size(0, 36), // 최소 높이 설정
                       ),
                     ),
-                  )
+                )
                 : Container(),
             SizedBox(
               height: 10,
@@ -210,7 +228,7 @@ class _TimeLedgerScreenState extends State<TimeLedgerScreen> {
                                 Expanded(
                                   flex: 2,
                                   child: Text(
-                                    '😲 ${neutralEmoji['😲']}',
+                                    '${neutralEmoji['놀람']} 놀람',
                                     style: _rowStyle,
                                     textAlign: TextAlign.center,
                                     overflow: TextOverflow.ellipsis,
@@ -248,7 +266,7 @@ class _TimeLedgerScreenState extends State<TimeLedgerScreen> {
                           );
                         },
                         separatorBuilder: (context, index) => SizedBox(
-                          height: 5,
+                          height: 10,
                         ),
                         itemCount: 5,
                       ),
@@ -293,6 +311,7 @@ class _TimeLedgerScreenState extends State<TimeLedgerScreen> {
       ),
       floatingActionButton: Column(
         mainAxisAlignment: MainAxisAlignment.end,
+        crossAxisAlignment: CrossAxisAlignment.end,
         children: [
           _selectedDate.month == DateTime.now().month &&
                   _selectedDate.day == DateTime.now().day
@@ -306,61 +325,565 @@ class _TimeLedgerScreenState extends State<TimeLedgerScreen> {
                   child: FloatingActionButton(
                     onPressed: () {
                       showModalBottomSheet(
+                        backgroundColor: Color(0xFFCDCAE2),
                         context: context,
+                        isScrollControlled: true,
                         builder: (context) {
-                          return Container(
-                            color: Color(0xFFCDCAE2),
-                            child: Padding(
-                              padding: const EdgeInsets.all(32.0),
-                              child: Column(
-                                children: [
-                                  Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Text(
-                                        '${_selectedDate.month}월 ${_selectedDate.day}일 일정 추가',
-                                        style: TextStyle(
-                                          fontSize: 21,
-                                          fontWeight: FontWeight.bold,
-                                          color: Color(0xFF5D659E),
+                          return Wrap(
+                            children: [
+                              Container(
+                                padding: const EdgeInsets.all(32.0),
+                                height: MediaQuery.of(context).size.height *
+                                    0.45, // 원하는 높이로 설정 (예: 화면 높이의 60%)
+                                child: Column(
+                                  children: [
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Text(
+                                          '${_selectedDate.month}월 ${_selectedDate.day}일 일정 추가',
+                                          style: boldStyle,
                                         ),
-                                      ),
-                                      IconButton(
+                                        IconButton(
+                                          onPressed: () {
+                                            Navigator.of(context).pop();
+                                          },
+                                          icon: Icon(Icons.close),
+                                        ),
+                                      ],
+                                    ),
+                                    SizedBox(
+                                      height: 20,
+                                    ),
+                                    Row(
+                                      children: [
+                                        Text(
+                                          '감정: ',
+                                          style:
+                                              boldStyle.copyWith(fontSize: 18),
+                                        ),
+                                        GestureDetector(
+                                          onTap: () {
+                                            showModalBottomSheet(
+                                              backgroundColor: Colors.white,
+                                              context: context,
+                                              isScrollControlled: true,
+                                              builder: (context) {
+                                                return Wrap(
+                                                  children: [
+                                                    DefaultTabController(
+                                                      length: 3, // 탭의 개수
+                                                      child: Container(
+                                                        height: MediaQuery.of(
+                                                                    context)
+                                                                .size
+                                                                .height *
+                                                            0.3,
+                                                        child: Column(
+                                                          children: [
+                                                            Row(
+                                                              mainAxisAlignment:
+                                                                  MainAxisAlignment
+                                                                      .spaceBetween,
+                                                              children: [
+                                                                Container(
+                                                                  alignment:
+                                                                      Alignment
+                                                                          .centerLeft,
+                                                                  child: TabBar(
+                                                                    tabAlignment:
+                                                                        TabAlignment
+                                                                            .start,
+                                                                    isScrollable:
+                                                                        true,
+                                                                    indicator:
+                                                                        BoxDecoration(
+                                                                      color: Color(
+                                                                              0xFF9B86BD)
+                                                                          .withOpacity(
+                                                                              0.41),
+                                                                      borderRadius:
+                                                                          BorderRadius.circular(
+                                                                              30),
+                                                                    ),
+                                                                    indicatorSize:
+                                                                        TabBarIndicatorSize
+                                                                            .tab,
+                                                                    indicatorPadding:
+                                                                        EdgeInsets.only(
+                                                                            top:
+                                                                                3,
+                                                                            bottom:
+                                                                                0),
+                                                                    dividerColor:
+                                                                        Colors
+                                                                            .transparent,
+                                                                    labelColor:
+                                                                        Color(
+                                                                            0xFF5A639C),
+                                                                    labelStyle: boldStyle.copyWith(
+                                                                        fontSize:
+                                                                            16),
+                                                                    unselectedLabelColor:
+                                                                        Color(
+                                                                            0xFF5A639C),
+                                                                    tabs: [
+                                                                      Tab(
+                                                                          text:
+                                                                              '긍정적'),
+                                                                      Tab(
+                                                                          text:
+                                                                              '중립'),
+                                                                      Tab(
+                                                                          text:
+                                                                              '부정적'),
+                                                                    ],
+                                                                  ),
+                                                                ),
+                                                                IconButton(
+                                                                  icon: Icon(
+                                                                      Icons
+                                                                          .close,
+                                                                      color: Colors
+                                                                          .grey),
+                                                                  onPressed:
+                                                                      () {
+                                                                    Navigator.pop(
+                                                                        context);
+                                                                  },
+                                                                ),
+                                                              ],
+                                                            ),
+                                                            Expanded(
+                                                              child: TabBarView(
+                                                                children: [
+                                                                  // 긍정적 탭의 내용
+                                                                  GridView
+                                                                      .builder(
+                                                                    shrinkWrap:
+                                                                        true,
+                                                                    padding:
+                                                                        EdgeInsets
+                                                                            .all(8),
+                                                                    gridDelegate:
+                                                                        SliverGridDelegateWithFixedCrossAxisCount(
+                                                                      crossAxisCount:
+                                                                          3,
+                                                                      childAspectRatio:
+                                                                          2.5,
+                                                                      crossAxisSpacing:
+                                                                          8,
+                                                                      mainAxisSpacing:
+                                                                          8,
+                                                                    ),
+                                                                    itemCount:
+                                                                        positiveEmoji
+                                                                            .length,
+                                                                    itemBuilder:
+                                                                        (context,
+                                                                            index) {
+                                                                      return _buildEmojiChip(positiveEmoji
+                                                                          .keys
+                                                                          .elementAt(
+                                                                              index));
+                                                                    },
+                                                                  ),
+                                                                  // 중립 탭의 내용
+                                                                  GridView
+                                                                      .builder(
+                                                                    shrinkWrap:
+                                                                        true,
+                                                                    padding:
+                                                                        EdgeInsets
+                                                                            .all(8),
+                                                                    gridDelegate:
+                                                                        SliverGridDelegateWithFixedCrossAxisCount(
+                                                                      crossAxisCount:
+                                                                          3,
+                                                                      childAspectRatio:
+                                                                          2.5,
+                                                                      crossAxisSpacing:
+                                                                          8,
+                                                                      mainAxisSpacing:
+                                                                          8,
+                                                                    ),
+                                                                    itemCount:
+                                                                        neutralEmoji
+                                                                            .length,
+                                                                    itemBuilder:
+                                                                        (context,
+                                                                            index) {
+                                                                      return _buildEmojiChip(neutralEmoji
+                                                                          .keys
+                                                                          .elementAt(
+                                                                              index));
+                                                                    },
+                                                                  ),
+                                                                  // 부정적 탭의 내용
+                                                                  GridView
+                                                                      .builder(
+                                                                    shrinkWrap:
+                                                                        true,
+                                                                    padding:
+                                                                        EdgeInsets
+                                                                            .all(8),
+                                                                    gridDelegate:
+                                                                        SliverGridDelegateWithFixedCrossAxisCount(
+                                                                      crossAxisCount:
+                                                                          3,
+                                                                      childAspectRatio:
+                                                                          2.5,
+                                                                      crossAxisSpacing:
+                                                                          8,
+                                                                      mainAxisSpacing:
+                                                                          8,
+                                                                    ),
+                                                                    itemCount:
+                                                                        negativeEmoji
+                                                                            .length,
+                                                                    itemBuilder:
+                                                                        (context,
+                                                                            index) {
+                                                                      return _buildEmojiChip(negativeEmoji
+                                                                          .keys
+                                                                          .elementAt(
+                                                                              index));
+                                                                    },
+                                                                  ),
+                                                                ],
+                                                              ),
+                                                            ),
+                                                          ],
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ],
+                                                );
+                                              },
+                                            );
+                                          },
+                                          child: Text(
+                                            '감정을 선택해주세요',
+                                            style: normalStyle,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    SizedBox(
+                                      height: 15,
+                                    ),
+                                    Row(
+                                      children: [
+                                        Text(
+                                          '분류: ',
+                                          style:
+                                              boldStyle.copyWith(fontSize: 18),
+                                        ),
+                                        GestureDetector(
+                                          onTap: () {
+                                            showModalBottomSheet(
+                                              backgroundColor: Colors.white,
+                                              context: context,
+                                              isScrollControlled: true,
+                                              builder: (context) {
+                                                return Wrap(
+                                                  children: [
+                                                    Container(
+                                                      height:
+                                                          MediaQuery.of(context)
+                                                                  .size
+                                                                  .height *
+                                                              0.3,
+                                                      child: Column(
+                                                        mainAxisAlignment:
+                                                            MainAxisAlignment
+                                                                .center,
+                                                        crossAxisAlignment:
+                                                            CrossAxisAlignment
+                                                                .stretch,
+                                                        children: [
+                                                          Row(
+                                                            mainAxisAlignment:
+                                                                MainAxisAlignment
+                                                                    .end,
+                                                            children: [
+                                                              IconButton(
+                                                                  onPressed:
+                                                                      () {
+                                                                    Navigator.of(
+                                                                            context)
+                                                                        .pop();
+                                                                  },
+                                                                  icon: Icon(Icons
+                                                                      .close))
+                                                            ],
+                                                          ),
+                                                          Expanded(
+                                                            child: ListView
+                                                                .separated(
+                                                              itemBuilder:
+                                                                  (context,
+                                                                      index) {
+                                                                return GestureDetector(
+                                                                  onTap: () {},
+                                                                  child: Text(
+                                                                    category[
+                                                                        index],
+                                                                    style:
+                                                                        TextStyle(
+                                                                      color:
+                                                                          buttonTextColor,
+                                                                      fontSize:
+                                                                          16,
+                                                                      fontWeight:
+                                                                          FontWeight
+                                                                              .w600,
+                                                                    ),
+                                                                    textAlign:
+                                                                        TextAlign
+                                                                            .center,
+                                                                  ),
+                                                                );
+                                                              },
+                                                              separatorBuilder:
+                                                                  (context,
+                                                                          index) =>
+                                                                      SizedBox(
+                                                                height: 15,
+                                                              ),
+                                                              itemCount:
+                                                                  category
+                                                                      .length,
+                                                            ),
+                                                          ),
+                                                        ],
+                                                      ),
+                                                    ),
+                                                  ],
+                                                );
+                                              },
+                                            );
+                                          },
+                                          child: Text(
+                                            '분류를 선택해주세요',
+                                            style: normalStyle,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    SizedBox(
+                                      height: 15,
+                                    ),
+                                    Row(
+                                      children: [
+                                        Text(
+                                          '내용: ',
+                                          style:
+                                              boldStyle.copyWith(fontSize: 18),
+                                        ),
+                                        GestureDetector(
+                                          onTap: () {
+                                            showModalBottomSheet(
+                                              context: context,
+                                              isScrollControlled: true, // Allow the bottom sheet to be fully scrollable
+                                              builder: (context) {
+                                                return Padding(
+                                                  padding: EdgeInsets.only(
+                                                    bottom: MediaQuery.of(context).viewInsets.bottom, // Adjust padding when the keyboard appears
+                                                  ),
+                                                  child: Container(
+                                                    height: MediaQuery.of(context).size.height * 0.3,
+                                                    child: Column(
+                                                      crossAxisAlignment: CrossAxisAlignment.end,
+                                                      children: [
+                                                        IconButton(
+                                                          onPressed: () {
+                                                            Navigator.of(context).pop();
+                                                          },
+                                                          icon: Icon(Icons.close),
+                                                        ),
+                                                        Expanded(
+                                                          child: Padding(
+                                                            padding: const EdgeInsets.fromLTRB(12, 0, 12, 12),
+                                                            child: TextFormField(
+                                                              textAlignVertical: TextAlignVertical.top,
+                                                              decoration: InputDecoration(
+                                                                border: OutlineInputBorder(
+                                                                  borderRadius: BorderRadius.circular(10.0),
+                                                                  borderSide: BorderSide.none,
+                                                                ),
+                                                                filled: true,
+                                                                fillColor: Color(0xFFA1A0CA),
+                                                                hintText: '답변이 어려우면 작성하지 않아도 괜찮아요',
+                                                                hintStyle: TextStyle(
+                                                                  color: hintTextColor,
+                                                                  fontSize: 16,
+                                                                  fontWeight: FontWeight.bold,
+                                                                ),
+                                                              ),
+                                                              maxLines: null,
+                                                              expands: true,
+                                                              style: TextStyle(
+                                                                fontSize: 16,
+                                                                color: Colors.white,
+                                                                fontWeight: FontWeight.bold,
+                                                              ),
+                                                            ),
+                                                          ),
+                                                        ),
+                                                        ElevatedButton(
+                                                          onPressed: () {},
+                                                          child: Text(
+                                                            '추가',
+                                                            style: boldStyle.copyWith(
+                                                              fontSize: 17,
+                                                            ),
+                                                          ),
+                                                          style: ElevatedButton.styleFrom(
+                                                            padding: EdgeInsets.symmetric(
+                                                              vertical: 4, horizontal: 24,
+                                                            ),
+                                                            backgroundColor: Color(0xFFDDD9D9),
+                                                            shape: RoundedRectangleBorder(
+                                                              borderRadius: BorderRadius.circular(10),
+                                                            ),
+                                                            tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                                                            minimumSize: Size(0, 36), // 최소 높이 설정
+                                                          ),
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  ),
+                                                );
+                                              },
+                                            );
+                                          },
+                                          child: Text(
+                                            '내용을 작성해주세요',
+                                            style: normalStyle,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    SizedBox(
+                                      height: 15,
+                                    ),
+                                    Row(
+                                      children: [
+                                        Text(
+                                          '시간: ',
+                                          style:
+                                              boldStyle.copyWith(fontSize: 18),
+                                        ),
+                                        GestureDetector(
+                                          onTap: () {
+                                            showModalBottomSheet(
+                                              context: context,
+                                              builder: (context) {
+                                                return Container(
+                                                  height: MediaQuery.of(context)
+                                                          .size
+                                                          .height *
+                                                      0.3,
+                                                  child: Column(
+                                                    crossAxisAlignment: CrossAxisAlignment.end,
+                                                    children: [
+                                                      IconButton(onPressed: (){
+                                                        Navigator.of(context).pop();
+                                                      }, icon: Icon(Icons.close)),
+                                                      Expanded(
+                                                        child: CupertinoPicker(
+                                                          itemExtent: 40,
+                                                          onSelectedItemChanged:
+                                                              (int index) {
+                                                            setState(() {
+                                                              selectedHour = index + 1;
+                                                            });
+                                                          },
+                                                          children:
+                                                              List<Widget>.generate(
+                                                                  24, (int index) {
+                                                            return Center(
+                                                              child: Text(
+                                                                '${index + 1}시간',
+                                                                style: boldStyle.copyWith(fontSize: 20),
+                                                              ),
+                                                            );
+                                                          }),
+                                                        ),
+                                                      ),
+                                                      ElevatedButton(
+                                                        onPressed: () {},
+                                                        child: Text(
+                                                          '추가',
+                                                          style: boldStyle.copyWith(
+                                                            fontSize: 17,
+                                                          ),
+                                                        ),
+                                                        style: ElevatedButton.styleFrom(
+                                                          padding: EdgeInsets.symmetric(
+                                                              vertical: 4, horizontal: 24),
+                                                          backgroundColor: Color(0xFFDDD9D9),
+                                                          shape: RoundedRectangleBorder(
+                                                            borderRadius:
+                                                            BorderRadius.circular(10),
+                                                          ),
+                                                          tapTargetSize: MaterialTapTargetSize
+                                                              .shrinkWrap,
+                                                          // 버튼 크기 줄이기
+                                                          minimumSize:
+                                                          Size(0, 36), // 최소 높이 설정
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                );
+                                              },
+                                            );
+                                          },
+                                          child: Text(
+                                            '소요시간을 작성해주세요(시간당)',
+                                            style: normalStyle,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    SizedBox(
+                                      height: 20,
+                                    ),
+                                    Row(
+                                      mainAxisAlignment: MainAxisAlignment.end,
+                                      children: [
+                                        ElevatedButton(
                                           onPressed: () {},
-                                          icon: Icon(Icons.close)),
-                                    ],
-                                  ),
-                                  SizedBox(
-                                    height: 10,
-                                  ),
-                                  Row(
-                                    children: [
-                                      Text(
-                                          '감정: 감정을 선택해주세요 or 😲${neutralEmoji['😲']}'),
-                                      Text('감정을 선택해주세요')
-                                    ],
-                                  ),
-                                  Row(
-                                    children: [
-                                      Text('분류: 분류를 선택해주세요 or 가족'),
-                                    ],
-                                  ),
-                                  Row(
-                                    children: [
-                                      Text('내용: 내용을 작성해주세요'),
-                                    ],
-                                  ),
-                                  Row(
-                                    children: [
-                                      Text('소요시간을 작성해주세요(시간당)'),
-                                    ],
-                                  ),
-                                  ElevatedButton(
-                                      onPressed: () {}, child: Text('추가')),
-                                ],
+                                          child: Text(
+                                            '추가',
+                                            style: boldStyle.copyWith(
+                                              fontSize: 17,
+                                            ),
+                                          ),
+                                          style: ElevatedButton.styleFrom(
+                                            padding: EdgeInsets.symmetric(
+                                                vertical: 4, horizontal: 24),
+                                            backgroundColor: Color(0xFFDDD9D9),
+                                            shape: RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(10),
+                                            ),
+                                            tapTargetSize: MaterialTapTargetSize
+                                                .shrinkWrap,
+                                            // 버튼 크기 줄이기
+                                            minimumSize:
+                                                Size(0, 36), // 최소 높이 설정
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ],
+                                ),
                               ),
-                            ),
+                            ],
                           );
                         },
                       );
@@ -394,4 +917,28 @@ class _TimeLedgerScreenState extends State<TimeLedgerScreen> {
       ),
     );
   }
+}
+
+Widget _buildEmojiChip(String label) {
+  return GestureDetector(
+    onTap: () {},
+    child: Chip(
+      label: Text(
+        '${Emoji[label]} $label',
+        style: TextStyle(
+          color: buttonTextColor,
+          fontSize: 16,
+          fontWeight: FontWeight.bold,
+        ),
+      ),
+      backgroundColor: Colors.white,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(20),
+        side: BorderSide(
+          color: buttonTextColor.withOpacity(0.5),
+          width: 1,
+        ),
+      ),
+    ),
+  );
 }
