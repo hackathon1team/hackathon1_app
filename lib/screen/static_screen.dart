@@ -1,7 +1,9 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:memory_app/const/colors.dart';
+import 'package:memory_app/const/emoji.dart';
 import 'package:memory_app/screen/components/glassmorphism.dart';
+import 'package:charts_flutter/flutter.dart' as charts;
 
 class StaticScreen extends StatefulWidget {
   const StaticScreen({super.key});
@@ -22,37 +24,6 @@ class _StaticScreenState extends State<StaticScreen> {
     '긍정': 18,
     '중립': 10,
     '부정': 3,
-  };
-
-  final Map<String, double> positiveData = {
-    '기쁨': 7,
-    '사랑': 3,
-    '감사': 1,
-    '희망': 2,
-    '만족': 5,
-    '흥분': 5,
-  };
-
-  final Map<String, double> neutralData = {
-    '놀람': 3,
-    '무관심': 0,
-    '혼란': 1,
-    '궁금함': 2,
-    '생각에 잠김': 1,
-    '평온': 3,
-  };
-
-  final Map<String, double> negativeData = {
-    '슬픔': 3,
-    '분노': 1,
-    '두려움': 1,
-    '혐오': 2,
-    '실망': 1,
-    '불안': 2,
-    '외로움': 2,
-    '질투': 3,
-    '죄책감': 1,
-    '수치심': 1,
   };
 
   PageController _pageController = PageController();
@@ -190,7 +161,9 @@ class _StaticScreenState extends State<StaticScreen> {
             ),
           ),
         ),
-        SizedBox(height: 20,),
+        SizedBox(
+          height: 20,
+        ),
         Expanded(
           child: BarChart(
             BarChartData(
@@ -256,9 +229,10 @@ class _StaticScreenState extends State<StaticScreen> {
                       barTouchResponse.spot != null &&
                       event.isInterestedForInteractions) {
                     final index = barTouchResponse.spot!.touchedBarGroupIndex;
-                    final key = mockData2.keys.elementAt(index);
-                    final value = mockData2[key];
-                    print('Tapped on $key with value $value');
+                    // final key = mockData2.keys.elementAt(index);
+                    // final value = mockData2[key];
+                    // _pageController.jumpToPage(index+2);
+                    _pageController.animateToPage(index+2, duration: Duration(milliseconds: 300), curve: Curves.easeInOut);
                     // 여기에 원하는 동작을 추가할 수 있습니다.
                   }
                 },
@@ -290,7 +264,351 @@ class _StaticScreenState extends State<StaticScreen> {
     );
   }
 
+  Widget positiveChart() {
+    List<charts.Series<StaticEmoji, String>> _createSampleData() {
+      final data = [
+        StaticEmoji('기쁨', 7),
+        StaticEmoji('사랑', 3),
+        StaticEmoji('감사', 1),
+        StaticEmoji('희망', 2),
+        StaticEmoji('만족', 5),
+        StaticEmoji('흥분', 5),
+      ];
 
+      return [
+        charts.Series<StaticEmoji, String>(
+          id: '긍정적 감정',
+          colorFn: (_, __) => charts.ColorUtil.fromDartColor(Color(0xFFFFE4A2)),
+          domainFn: (StaticEmoji emoji, _) =>
+              '${emoji.emoji}${positiveEmoji[emoji.emoji]}',
+          measureFn: (StaticEmoji emoji, _) => emoji.value,
+          data: data,
+          labelAccessorFn: (StaticEmoji emotion, _) => '${emotion.value}회',
+        )
+      ];
+    }
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        Padding(
+          padding: const EdgeInsets.fromLTRB(20, 40, 20, 0),
+          child: Container(
+            height: 80,
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(60),
+            ),
+            child: Stack(
+              clipBehavior: Clip.none,
+              children: [
+                Positioned(
+                  top: -10,
+                  right: 10,
+                  child: Image.asset(
+                    'assets/components/star.png',
+                    // height: 40,
+                    // width: 40,
+                    scale: 0.7,
+                  ),
+                ),
+                Center(
+                  child: Text(
+                    '긍정적 감정',
+                    style: TextStyle(
+                      fontSize: 20,
+                      color: Color(0xFF5A639C),
+                      fontWeight: FontWeight.bold,
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+        SizedBox(
+          height: 20,
+        ),
+        Expanded(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 20),
+            child: charts.BarChart(
+              _createSampleData(),
+              animate: true,
+              vertical: false,
+              defaultRenderer: charts.BarRendererConfig(
+                cornerStrategy: const charts.ConstCornerStrategy(30),
+                barRendererDecorator: charts.BarLabelDecorator<String>(
+                  insideLabelStyleSpec: charts.TextStyleSpec(
+                    color: charts.MaterialPalette.black,
+                  ),
+                ),
+              ),
+              domainAxis: charts.OrdinalAxisSpec(
+                renderSpec: charts.SmallTickRendererSpec(
+                  labelStyle: charts.TextStyleSpec(
+                    color: charts.ColorUtil.fromDartColor(Colors.white),
+                    fontSize: 14,
+                  ),
+                  lineStyle: charts.LineStyleSpec(
+                    color: charts.ColorUtil.fromDartColor(Colors.transparent),
+                    thickness: 0, // domain axis 기준선 제거
+                  ),
+                ),
+                showAxisLine: false,
+              ),
+              primaryMeasureAxis: charts.NumericAxisSpec(
+                renderSpec: charts.GridlineRendererSpec(
+                  labelStyle: charts.TextStyleSpec(
+                    color: charts.ColorUtil.fromDartColor(
+                        Colors.transparent), // Label을 숨깁니다.
+                  ),
+                  lineStyle: charts.LineStyleSpec(
+                    color: charts.ColorUtil.fromDartColor(Colors.transparent),
+                    thickness: 0, // primaryMeasure axis 기준선 제거
+                  ),
+                ),
+                showAxisLine: false,
+              ),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget neutralChart() {
+    List<charts.Series<StaticEmoji, String>> _createSampleData() {
+      final data = [
+        StaticEmoji('놀람', 3),
+        StaticEmoji('무관심', 0),
+        StaticEmoji('혼란', 1),
+        StaticEmoji('궁금함', 2),
+        StaticEmoji('생각에 잠김', 1),
+        StaticEmoji('평온', 3),
+      ];
+
+      return [
+        charts.Series<StaticEmoji, String>(
+          id: '중립적 감정',
+          colorFn: (_, __) => charts.ColorUtil.fromDartColor(Color(0xFFFFE4A2)),
+          domainFn: (StaticEmoji emoji, _) =>
+              '${emoji.emoji}${neutralEmoji[emoji.emoji]}',
+          measureFn: (StaticEmoji emoji, _) => emoji.value,
+          data: data,
+          labelAccessorFn: (StaticEmoji emotion, _) => '${emotion.value}회',
+        )
+      ];
+    }
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        Padding(
+          padding: const EdgeInsets.fromLTRB(20, 40, 20, 0),
+          child: Container(
+            height: 80,
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(60),
+            ),
+            child: Stack(
+              clipBehavior: Clip.none,
+              children: [
+                Positioned(
+                  top: -10,
+                  right: 10,
+                  child: Image.asset(
+                    'assets/components/star.png',
+                    // height: 40,
+                    // width: 40,
+                    scale: 0.7,
+                  ),
+                ),
+                Center(
+                  child: Text(
+                    '중립적 감정',
+                    style: TextStyle(
+                      fontSize: 20,
+                      color: Color(0xFF5A639C),
+                      fontWeight: FontWeight.bold,
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+        SizedBox(
+          height: 20,
+        ),
+        Expanded(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 20),
+            child: charts.BarChart(
+              _createSampleData(),
+              animate: true,
+              vertical: false,
+              defaultRenderer: charts.BarRendererConfig(
+                cornerStrategy: const charts.ConstCornerStrategy(30),
+                barRendererDecorator: charts.BarLabelDecorator<String>(
+                  insideLabelStyleSpec: charts.TextStyleSpec(
+                    color: charts.MaterialPalette.black,
+                  ),
+                ),
+              ),
+              domainAxis: charts.OrdinalAxisSpec(
+                renderSpec: charts.SmallTickRendererSpec(
+                  labelStyle: charts.TextStyleSpec(
+                    color: charts.ColorUtil.fromDartColor(Colors.white),
+                    fontSize: 14,
+                  ),
+                  lineStyle: charts.LineStyleSpec(
+                    color: charts.ColorUtil.fromDartColor(Colors.transparent),
+                    thickness: 0, // domain axis 기준선 제거
+                  ),
+                ),
+                showAxisLine: false,
+              ),
+              primaryMeasureAxis: charts.NumericAxisSpec(
+                renderSpec: charts.GridlineRendererSpec(
+                  labelStyle: charts.TextStyleSpec(
+                    color: charts.ColorUtil.fromDartColor(
+                        Colors.transparent), // Label을 숨깁니다.
+                  ),
+                  lineStyle: charts.LineStyleSpec(
+                    color: charts.ColorUtil.fromDartColor(Colors.transparent),
+                    thickness: 0, // primaryMeasure axis 기준선 제거
+                  ),
+                ),
+                showAxisLine: false,
+              ),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget negativeChart() {
+    List<charts.Series<StaticEmoji, String>> _createSampleData() {
+      final data = [
+        StaticEmoji('슬픔', 3),
+        StaticEmoji('분노', 1),
+        StaticEmoji('두려움', 1),
+        StaticEmoji('혐오', 2),
+        StaticEmoji('실망', 1),
+        StaticEmoji('불안', 2),
+        StaticEmoji('외로움', 2),
+        StaticEmoji('질투', 3),
+        StaticEmoji('죄책감', 1),
+        StaticEmoji('수치심', 1),
+      ];
+
+      return [
+        charts.Series<StaticEmoji, String>(
+          id: '부정적 감정',
+          colorFn: (_, __) => charts.ColorUtil.fromDartColor(Color(0xFFFFE4A2)),
+          domainFn: (StaticEmoji emoji, _) =>
+              '${emoji.emoji}${negativeEmoji[emoji.emoji]}',
+          measureFn: (StaticEmoji emoji, _) => emoji.value,
+          data: data,
+          labelAccessorFn: (StaticEmoji emotion, _) => '${emotion.value}회',
+        )
+      ];
+    }
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        Padding(
+          padding: const EdgeInsets.fromLTRB(20, 40, 20, 0),
+          child: Container(
+            height: 80,
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(60),
+            ),
+            child: Stack(
+              clipBehavior: Clip.none,
+              children: [
+                Positioned(
+                  top: -10,
+                  right: 10,
+                  child: Image.asset(
+                    'assets/components/star.png',
+                    // height: 40,
+                    // width: 40,
+                    scale: 0.7,
+                  ),
+                ),
+                Center(
+                  child: Text(
+                    '부정적 감정',
+                    style: TextStyle(
+                      fontSize: 20,
+                      color: Color(0xFF5A639C),
+                      fontWeight: FontWeight.bold,
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+        SizedBox(
+          height: 20,
+        ),
+        Expanded(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 20),
+            child: charts.BarChart(
+              _createSampleData(),
+              animate: true,
+              vertical: false,
+              defaultRenderer: charts.BarRendererConfig(
+                cornerStrategy: const charts.ConstCornerStrategy(30),
+                barRendererDecorator: charts.BarLabelDecorator<String>(
+                  insideLabelStyleSpec: charts.TextStyleSpec(
+                    color: charts.MaterialPalette.black,
+                  ),
+                ),
+              ),
+              domainAxis: charts.OrdinalAxisSpec(
+                renderSpec: charts.SmallTickRendererSpec(
+                  labelStyle: charts.TextStyleSpec(
+                    color: charts.ColorUtil.fromDartColor(Colors.white),
+                    fontSize: 14,
+                  ),
+                  lineStyle: charts.LineStyleSpec(
+                    color: charts.ColorUtil.fromDartColor(Colors.transparent),
+                    thickness: 0, // domain axis 기준선 제거
+                  ),
+                ),
+                showAxisLine: false,
+              ),
+              primaryMeasureAxis: charts.NumericAxisSpec(
+                renderSpec: charts.GridlineRendererSpec(
+                  labelStyle: charts.TextStyleSpec(
+                    color: charts.ColorUtil.fromDartColor(
+                        Colors.transparent), // Label을 숨깁니다.
+                  ),
+                  lineStyle: charts.LineStyleSpec(
+                    color: charts.ColorUtil.fromDartColor(Colors.transparent),
+                    thickness: 0, // primaryMeasure axis 기준선 제거
+                  ),
+                ),
+                showAxisLine: false,
+              ),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -320,28 +638,28 @@ class _StaticScreenState extends State<StaticScreen> {
                   child: lastMonthChart(),
                 ),
                 Glassmorphism(
-                  child: Container(),
+                  child: positiveChart(),
                 ),
                 Glassmorphism(
-                  child: Container(),
+                  child: neutralChart(),
                 ),
                 Glassmorphism(
-                  child: Container(),
+                  child: negativeChart(),
                 ),
               ],
             ),
             if (_currentPage < 4)
-            Align(
-              alignment: Alignment.bottomCenter,
-              child: IconButton(
-                onPressed: _nextPage,
-                icon: Icon(
-                  Icons.keyboard_double_arrow_down,
-                  color: Colors.white,
-                  size: 60,
+              Align(
+                alignment: Alignment.bottomCenter,
+                child: IconButton(
+                  onPressed: _nextPage,
+                  icon: Icon(
+                    Icons.keyboard_double_arrow_down,
+                    color: Colors.white,
+                    size: 60,
+                  ),
                 ),
               ),
-            ),
             if (_currentPage > 0)
               Padding(
                 padding: const EdgeInsets.only(top: 40.0),
@@ -362,4 +680,11 @@ class _StaticScreenState extends State<StaticScreen> {
       ),
     );
   }
+}
+
+class StaticEmoji {
+  final String emoji;
+  final int value;
+
+  StaticEmoji(this.emoji, this.value);
 }
