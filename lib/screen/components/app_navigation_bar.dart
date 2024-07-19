@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 class AppNavigationBar extends StatelessWidget {
   final int currentIndex;
+
   const AppNavigationBar({super.key, required this.currentIndex});
 
   @override

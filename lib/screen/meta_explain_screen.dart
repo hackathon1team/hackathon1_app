@@ -177,6 +177,7 @@ class _MetaExplainScreenState extends State<MetaExplainScreen> {
                 child: CustomButton(
                   text: '질문 대답 하러가기',
                   right: true,
+                  backgroundcolor: Colors.white,
                   onPressed: () => Navigator.push(
                       context,
                       MaterialPageRoute(

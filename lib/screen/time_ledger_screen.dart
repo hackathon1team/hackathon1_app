@@ -127,8 +127,8 @@ class _TimeLedgerScreenState extends State<TimeLedgerScreen> {
             _selectedDate.month != DateTime.now().month ||
                     _selectedDate.day != DateTime.now().day
                 ? Padding(
-                  padding: const EdgeInsets.only(left: 16.0),
-                  child: Align(
+                    padding: const EdgeInsets.only(left: 16.0),
+                    child: Align(
                       alignment: Alignment.centerLeft,
                       child: ElevatedButton(
                         onPressed: () {
@@ -156,7 +156,7 @@ class _TimeLedgerScreenState extends State<TimeLedgerScreen> {
                         ),
                       ),
                     ),
-                )
+                  )
                 : Container(),
             SizedBox(
               height: 10,
@@ -686,48 +686,86 @@ class _TimeLedgerScreenState extends State<TimeLedgerScreen> {
                                           onTap: () {
                                             showModalBottomSheet(
                                               context: context,
-                                              isScrollControlled: true, // Allow the bottom sheet to be fully scrollable
+                                              isScrollControlled: true,
+                                              // Allow the bottom sheet to be fully scrollable
                                               builder: (context) {
                                                 return Padding(
                                                   padding: EdgeInsets.only(
-                                                    bottom: MediaQuery.of(context).viewInsets.bottom, // Adjust padding when the keyboard appears
+                                                    bottom: MediaQuery.of(
+                                                            context)
+                                                        .viewInsets
+                                                        .bottom, // Adjust padding when the keyboard appears
                                                   ),
                                                   child: Container(
-                                                    height: MediaQuery.of(context).size.height * 0.3,
+                                                    height:
+                                                        MediaQuery.of(context)
+                                                                .size
+                                                                .height *
+                                                            0.3,
                                                     child: Column(
-                                                      crossAxisAlignment: CrossAxisAlignment.end,
+                                                      crossAxisAlignment:
+                                                          CrossAxisAlignment
+                                                              .end,
                                                       children: [
                                                         IconButton(
                                                           onPressed: () {
-                                                            Navigator.of(context).pop();
+                                                            Navigator.of(
+                                                                    context)
+                                                                .pop();
                                                           },
-                                                          icon: Icon(Icons.close),
+                                                          icon:
+                                                              Icon(Icons.close),
                                                         ),
                                                         Expanded(
                                                           child: Padding(
-                                                            padding: const EdgeInsets.fromLTRB(12, 0, 12, 12),
-                                                            child: TextFormField(
-                                                              textAlignVertical: TextAlignVertical.top,
-                                                              decoration: InputDecoration(
-                                                                border: OutlineInputBorder(
-                                                                  borderRadius: BorderRadius.circular(10.0),
-                                                                  borderSide: BorderSide.none,
+                                                            padding:
+                                                                const EdgeInsets
+                                                                    .fromLTRB(
+                                                                    12,
+                                                                    0,
+                                                                    12,
+                                                                    12),
+                                                            child:
+                                                                TextFormField(
+                                                              textAlignVertical:
+                                                                  TextAlignVertical
+                                                                      .top,
+                                                              decoration:
+                                                                  InputDecoration(
+                                                                border:
+                                                                    OutlineInputBorder(
+                                                                  borderRadius:
+                                                                      BorderRadius
+                                                                          .circular(
+                                                                              10.0),
+                                                                  borderSide:
+                                                                      BorderSide
+                                                                          .none,
                                                                 ),
                                                                 filled: true,
-                                                                fillColor: Color(0xFFA1A0CA),
-                                                                hintText: '답변이 어려우면 작성하지 않아도 괜찮아요',
-                                                                hintStyle: TextStyle(
-                                                                  color: hintTextColor,
+                                                                fillColor: Color(
+                                                                    0xFFA1A0CA),
+                                                                hintText:
+                                                                    '답변이 어려우면 작성하지 않아도 괜찮아요',
+                                                                hintStyle:
+                                                                    TextStyle(
+                                                                  color:
+                                                                      hintTextColor,
                                                                   fontSize: 16,
-                                                                  fontWeight: FontWeight.bold,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .bold,
                                                                 ),
                                                               ),
                                                               maxLines: null,
                                                               expands: true,
                                                               style: TextStyle(
                                                                 fontSize: 16,
-                                                                color: Colors.white,
-                                                                fontWeight: FontWeight.bold,
+                                                                color: Colors
+                                                                    .white,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .bold,
                                                               ),
                                                             ),
                                                           ),
@@ -736,20 +774,33 @@ class _TimeLedgerScreenState extends State<TimeLedgerScreen> {
                                                           onPressed: () {},
                                                           child: Text(
                                                             '추가',
-                                                            style: boldStyle.copyWith(
+                                                            style: boldStyle
+                                                                .copyWith(
                                                               fontSize: 17,
                                                             ),
                                                           ),
-                                                          style: ElevatedButton.styleFrom(
-                                                            padding: EdgeInsets.symmetric(
-                                                              vertical: 4, horizontal: 24,
+                                                          style: ElevatedButton
+                                                              .styleFrom(
+                                                            padding: EdgeInsets
+                                                                .symmetric(
+                                                              vertical: 4,
+                                                              horizontal: 24,
                                                             ),
-                                                            backgroundColor: Color(0xFFDDD9D9),
-                                                            shape: RoundedRectangleBorder(
-                                                              borderRadius: BorderRadius.circular(10),
+                                                            backgroundColor:
+                                                                Color(
+                                                                    0xFFDDD9D9),
+                                                            shape:
+                                                                RoundedRectangleBorder(
+                                                              borderRadius:
+                                                                  BorderRadius
+                                                                      .circular(
+                                                                          10),
                                                             ),
-                                                            tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                                                            minimumSize: Size(0, 36), // 최소 높이 설정
+                                                            tapTargetSize:
+                                                                MaterialTapTargetSize
+                                                                    .shrinkWrap,
+                                                            minimumSize: Size(0,
+                                                                36), // 최소 높이 설정
                                                           ),
                                                         ),
                                                       ],
@@ -787,27 +838,37 @@ class _TimeLedgerScreenState extends State<TimeLedgerScreen> {
                                                           .height *
                                                       0.3,
                                                   child: Column(
-                                                    crossAxisAlignment: CrossAxisAlignment.end,
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment.end,
                                                     children: [
-                                                      IconButton(onPressed: (){
-                                                        Navigator.of(context).pop();
-                                                      }, icon: Icon(Icons.close)),
+                                                      IconButton(
+                                                          onPressed: () {
+                                                            Navigator.of(
+                                                                    context)
+                                                                .pop();
+                                                          },
+                                                          icon: Icon(
+                                                              Icons.close)),
                                                       Expanded(
                                                         child: CupertinoPicker(
                                                           itemExtent: 40,
                                                           onSelectedItemChanged:
                                                               (int index) {
                                                             setState(() {
-                                                              selectedHour = index + 1;
+                                                              selectedHour =
+                                                                  index + 1;
                                                             });
                                                           },
-                                                          children:
-                                                              List<Widget>.generate(
-                                                                  24, (int index) {
+                                                          children: List<
+                                                                  Widget>.generate(
+                                                              24, (int index) {
                                                             return Center(
                                                               child: Text(
                                                                 '${index + 1}시간',
-                                                                style: boldStyle.copyWith(fontSize: 20),
+                                                                style: boldStyle
+                                                                    .copyWith(
+                                                                        fontSize:
+                                                                            20),
                                                               ),
                                                             );
                                                           }),
@@ -817,23 +878,33 @@ class _TimeLedgerScreenState extends State<TimeLedgerScreen> {
                                                         onPressed: () {},
                                                         child: Text(
                                                           '추가',
-                                                          style: boldStyle.copyWith(
+                                                          style: boldStyle
+                                                              .copyWith(
                                                             fontSize: 17,
                                                           ),
                                                         ),
-                                                        style: ElevatedButton.styleFrom(
-                                                          padding: EdgeInsets.symmetric(
-                                                              vertical: 4, horizontal: 24),
-                                                          backgroundColor: Color(0xFFDDD9D9),
-                                                          shape: RoundedRectangleBorder(
+                                                        style: ElevatedButton
+                                                            .styleFrom(
+                                                          padding: EdgeInsets
+                                                              .symmetric(
+                                                                  vertical: 4,
+                                                                  horizontal:
+                                                                      24),
+                                                          backgroundColor:
+                                                              Color(0xFFDDD9D9),
+                                                          shape:
+                                                              RoundedRectangleBorder(
                                                             borderRadius:
-                                                            BorderRadius.circular(10),
+                                                                BorderRadius
+                                                                    .circular(
+                                                                        10),
                                                           ),
-                                                          tapTargetSize: MaterialTapTargetSize
-                                                              .shrinkWrap,
+                                                          tapTargetSize:
+                                                              MaterialTapTargetSize
+                                                                  .shrinkWrap,
                                                           // 버튼 크기 줄이기
-                                                          minimumSize:
-                                                          Size(0, 36), // 최소 높이 설정
+                                                          minimumSize: Size(0,
+                                                              36), // 최소 높이 설정
                                                         ),
                                                       ),
                                                     ],

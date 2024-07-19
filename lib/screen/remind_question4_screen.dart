@@ -94,7 +94,7 @@ class _RemindQuestion4ScreenState extends State<RemindQuestion4Screen> {
               left: 40,
               child: CustomButton(
                 text: '이전 질문',
-                right: false,
+                right: false,backgroundcolor: Colors.white,
                 onPressed: () => Navigator.of(context).pop(),
               ),
             ),
@@ -103,7 +103,7 @@ class _RemindQuestion4ScreenState extends State<RemindQuestion4Screen> {
               right: 40,
               child: CustomButton(
                 text: '시작하기',
-                right: true,
+                right: true,backgroundcolor: Colors.white,
                 onPressed: () => Navigator.push(
                     context,
                     MaterialPageRoute(

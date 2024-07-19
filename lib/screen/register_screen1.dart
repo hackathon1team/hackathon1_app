@@ -61,7 +61,7 @@ class RegisterScreen1 extends StatelessWidget {
             Positioned(
               bottom: 40,
               right: 40,
-              child: CustomButton(text: '회원가입 하러가기', right: true, onPressed: () => Navigator.push(
+              child: CustomButton(text: '회원가입 하러가기', right: true,backgroundcolor: Colors.white, onPressed: () => Navigator.push(
                   context,
                   MaterialPageRoute(
                     builder: (context) => RegisterScreen2(),

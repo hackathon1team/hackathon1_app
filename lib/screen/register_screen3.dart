@@ -154,7 +154,7 @@ class _RegisterScreen3State extends State<RegisterScreen3> {
               left: 40,
               child: CustomButton(
                 text: '이전 질문',
-                right: false,
+                right: false,backgroundcolor: Colors.white,
                 onPressed: () => Navigator.of(context).pop(),
               ),
             ),
@@ -163,7 +163,7 @@ class _RegisterScreen3State extends State<RegisterScreen3> {
               right: 40,
               child: CustomButton(
                 text: '다음 질문',
-                right: true,
+                right: true,backgroundcolor: Colors.white,
                 onPressed: () => Navigator.push(
                     context,
                     MaterialPageRoute(

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-const hintTextColor = Color(0xFFEDECEC);
+Color hintTextColor = Color(0xFFEDECEC).withOpacity(0.83);
 
 const loginButtonColor = Color(0xFF64618B);
 

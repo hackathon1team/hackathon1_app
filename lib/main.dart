@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:memory_app/screen/login_screen.dart';
 import 'package:memory_app/screen/home_screen.dart';
 
@@ -20,11 +21,14 @@ class MyApp extends StatelessWidget {
           selectedItemColor: Colors.white,
           unselectedItemColor: Color(0xFF564B6A),
         ),
+        textTheme: GoogleFonts.interTextTheme(
+          Theme.of(context).textTheme,
+        ),
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
       debugShowCheckedModeBanner: false,
-      home: const HomeScreen(),
+      home: HomeScreen(currentIndex: 1,),
     );
   }
 }
