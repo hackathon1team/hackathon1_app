@@ -12,13 +12,13 @@ class MecoQuestionStartScreen extends StatefulWidget {
 }
 
 class _MecoQuestionStartScreenState extends State<MecoQuestionStartScreen> {
-  bool writed = true;
+  bool timeWrited = true;
 
   bool isDropdownOpen = false;
   String selectedItem = '친구 만나기';
   List<String> items = ['공부하기', '운동하기', '알바하기', '친구 만나기', '게임하기', '책 읽기'];
 
-  Widget _writeFalse() {
+  Widget _timeWriteFalse() {
     return Stack(
       children: [
         Positioned(
@@ -98,7 +98,7 @@ class _MecoQuestionStartScreenState extends State<MecoQuestionStartScreen> {
     );
   }
 
-  Widget _writeTrue() {
+  Widget _timeWriteTrue() {
     return Stack(
       children: [
         Positioned(
@@ -227,7 +227,7 @@ class _MecoQuestionStartScreenState extends State<MecoQuestionStartScreen> {
             fit: BoxFit.cover,
           ),
         ),
-        child: writed ? _writeTrue() : _writeFalse(),
+        child: timeWrited ? _timeWriteTrue() : _timeWriteFalse(),
       ),
     );
   }

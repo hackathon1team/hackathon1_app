@@ -28,7 +28,7 @@ class MyApp extends StatelessWidget {
         useMaterial3: true,
       ),
       debugShowCheckedModeBanner: false,
-      home: HomeScreen(currentIndex: 1,),
+      home: LoginScreen(),
     );
   }
 }

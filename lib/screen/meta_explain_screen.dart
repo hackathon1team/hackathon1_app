@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:memory_app/screen/register_screen4.dart';
+import 'package:memory_app/screen/remind_question_screen.dart';
 
 
 import 'components/custom_button.dart';
@@ -55,7 +56,7 @@ class _MetaExplainScreenState extends State<MetaExplainScreen> {
         child: Stack(
           children: [
             Positioned(
-              left: 114,
+              left: 104,
               top: 193,
               child: SizedBox(
                 width: 173,
@@ -75,7 +76,7 @@ class _MetaExplainScreenState extends State<MetaExplainScreen> {
               ),
             ),
             Positioned(
-              left: 75,
+              left: 85,
               top: 335,
               child: SizedBox(
                 width: 112,
@@ -95,7 +96,7 @@ class _MetaExplainScreenState extends State<MetaExplainScreen> {
               ),
             ),
             Positioned(
-              left: 227,
+              left: 217,
               top: 386,
               child: SizedBox(
                 width: 105,
@@ -115,7 +116,7 @@ class _MetaExplainScreenState extends State<MetaExplainScreen> {
               ),
             ),
             Positioned(
-              left: 114,
+              left: 104,
               top: 437,
               child: SizedBox(
                 width: 105,
@@ -135,7 +136,7 @@ class _MetaExplainScreenState extends State<MetaExplainScreen> {
               ),
             ),
             Positioned(
-              left: 44,
+              left: 34,
               top: 576,
               child: SizedBox(
                 width: 335,
@@ -181,7 +182,7 @@ class _MetaExplainScreenState extends State<MetaExplainScreen> {
                   onPressed: () => Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => RemindQuestion1Screen(),
+                        builder: (context) => RemindQuestionScreen(currentIndex: 0,),
                       )),
                 ),
               ),

@@ -24,7 +24,7 @@ class CustomProgressBar extends StatelessWidget {
           ),
         ),
         Positioned(
-          left: 300 * value - 15, // Adjust -10 to center the image
+          left: 300 * value - 30, // Adjust -10 to center the image
           top: -12,
 
           child: Image.asset(

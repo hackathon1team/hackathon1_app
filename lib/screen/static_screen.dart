@@ -342,7 +342,7 @@ class _StaticScreenState extends State<StaticScreen> {
                     final index = barTouchResponse.spot!.touchedBarGroupIndex;
                     // final key = mockData2.keys.elementAt(index);
                     // final value = mockData2[key];
-                    _pageController.jumpToPage(index + 2);
+                    _pageController.jumpToPage(index + 3);
                     // _pageController.animateToPage(index + 2,
                     //     duration: Duration(milliseconds: 300),
                     //     curve: Curves.easeInOut);
@@ -744,23 +744,41 @@ class _StaticScreenState extends State<StaticScreen> {
                 });
               },
               children: [
-                Glassmorphism(
-                  child: mostTimeChart(),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                  child: Glassmorphism(
+                    child: mostTimeChart(),
+                  ),
                 ),
-                Glassmorphism(
-                  child: lastmonthChart(),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                  child: Glassmorphism(
+                    child: lastmonthChart(),
+                  ),
                 ),
-                Glassmorphism(
-                  child: mostEmojiChart(),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                  child: Glassmorphism(
+                    child: mostEmojiChart(),
+                  ),
                 ),
-                Glassmorphism(
-                  child: positiveChart(),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                  child: Glassmorphism(
+                    child: positiveChart(),
+                  ),
                 ),
-                Glassmorphism(
-                  child: neutralChart(),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                  child: Glassmorphism(
+                    child: neutralChart(),
+                  ),
                 ),
-                Glassmorphism(
-                  child: negativeChart(),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                  child: Glassmorphism(
+                    child: negativeChart(),
+                  ),
                 ),
               ],
             ),

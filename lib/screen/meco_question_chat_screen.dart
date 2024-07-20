@@ -1,5 +1,5 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:memory_app/screen/meco_question_summary_screen.dart';
 
 import '../const/colors.dart';
 import 'components/app_navigation_bar.dart';
@@ -20,7 +20,7 @@ class _ChatScreenState extends State<ChatScreen> {
   bool loading = false;
   List textChat = [];
   String name = '태기';
-  int index = 1;
+  int currentIndex = 1;
 
   final TextEditingController _textController = TextEditingController();
   final ScrollController _controller = ScrollController();
@@ -28,11 +28,11 @@ class _ChatScreenState extends State<ChatScreen> {
   @override
   void initState() {
     super.initState();
-    fromText(query: widget.event, currentindex: -1);
+    fromText(query: widget.event, index: -1);
   }
 
   // Text only input
-  void fromText({required String query, required int currentindex}) {
+  void fromText({required String query, required int index}) {
     List question = [
       '오늘의 인상깊은 사건은 무엇인가요?',
       '이 사건에 대한 감정은 무엇이고 원인은 무엇인가요?',
@@ -41,18 +41,18 @@ class _ChatScreenState extends State<ChatScreen> {
       '그렇군요. $name님 오늘 하루도 고생 많으셨어요 !',
     ];
 
-    if (currentindex == -1) {
+    if (index == -1) {
       setState(() {
         textChat.add({
           "role": 'Meco',
-          'index': currentindex + 1,
-          "text": question[currentindex + 1],
+          'index': index + 1,
+          "text": question[index + 1],
         });
       });
       setState(() {
         textChat.add({
           "role": name,
-          'index': currentindex + 1,
+          'index': index + 1,
           "text": query,
         });
       });
@@ -60,8 +60,8 @@ class _ChatScreenState extends State<ChatScreen> {
       setState(() {
         textChat.add({
           "role": 'Meco',
-          'index': currentindex + 2,
-          "text": question[currentindex + 2],
+          'index': index + 2,
+          "text": question[index + 2],
         });
       });
     } else {
@@ -69,7 +69,7 @@ class _ChatScreenState extends State<ChatScreen> {
         loading = true;
         textChat.add({
           "role": name,
-          'index': currentindex,
+          'index': index,
           "text": query,
         });
         _textController.clear();
@@ -79,8 +79,8 @@ class _ChatScreenState extends State<ChatScreen> {
         loading = false;
         textChat.add({
           "role": 'Meco',
-          'index': currentindex + 1,
-          "text": question[currentindex + 1],
+          'index': index + 1,
+          "text": question[index + 1],
         });
       });
     }
@@ -211,7 +211,7 @@ class _ChatScreenState extends State<ChatScreen> {
                 },
               ),
             ),
-            if (index < 4)
+            if (currentIndex < 4)
               Stack(
                 children: [
                   Padding(
@@ -227,7 +227,8 @@ class _ChatScreenState extends State<ChatScreen> {
                             borderSide: BorderSide.none,
                           ),
                           filled: true,
-                          fillColor: Color(0xFF665E8A),
+                          fillColor: Colors.black.withOpacity(0.25),
+                          // Color(0xFF665E8A),
                           hintText:
                               '메코한테는 솔직한 답변을 해주세요.\n답변을 하기 어렵다면 아무것도 입력하지말고\n\'보내기\'를 눌러주세요.',
                           hintStyle: TextStyle(
@@ -251,9 +252,10 @@ class _ChatScreenState extends State<ChatScreen> {
                     child: GestureDetector(
                       onTap: () {
                         fromText(
-                            query: _textController.text, currentindex: index);
+                            query: _textController.text,
+                            index: currentIndex);
                         setState(() {
-                          index += 1;
+                          currentIndex += 1;
                         });
                       },
                       child: Container(
@@ -261,7 +263,7 @@ class _ChatScreenState extends State<ChatScreen> {
                             EdgeInsets.symmetric(horizontal: 9, vertical: 7),
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(10),
-                          color: Color(0xFF524969),
+                          color: Colors.black.withOpacity(0.25),
                         ),
                         child: Text(
                           '보내기',
@@ -275,6 +277,32 @@ class _ChatScreenState extends State<ChatScreen> {
                     ),
                   ),
                 ],
+              ),
+            if (currentIndex == 4)
+              ElevatedButton(
+                onPressed: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) =>
+                            MecoQuestionSummaryScreen(chat: textChat, selectedDay: DateTime.now(),),
+                      ));
+                },
+                child: Text(
+                  '오늘의 답변 확인하기',
+                  style: TextStyle(
+                    fontSize: 15,
+                    color: Color(0xFFD9AEAE),
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                style: ElevatedButton.styleFrom(
+                  padding: const EdgeInsets.symmetric(horizontal: 10),
+                  backgroundColor: Color(0xFFDDD9D9).withOpacity(0.2),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                ),
               ),
           ],
         ),

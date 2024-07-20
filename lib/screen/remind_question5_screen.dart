@@ -6,7 +6,8 @@ import 'components/custom_button.dart';
 import 'home_screen.dart';
 
 class RemindQuestion5Screen extends StatefulWidget {
-  const RemindQuestion5Screen({super.key});
+  final VoidCallback previous;
+  const RemindQuestion5Screen({super.key, required this.previous});
 
   @override
   State<RemindQuestion5Screen> createState() => _RemindQuestion5ScreenState();
@@ -95,14 +96,14 @@ class _RemindQuestion5ScreenState extends State<RemindQuestion5Screen> {
               child: CustomButton(
                 text: '이전 질문',
                 right: false,backgroundcolor: Colors.white,
-                onPressed: () => Navigator.of(context).pop(),
+                onPressed: widget.previous,
               ),
             ),
             Positioned(
               bottom: 40,
               right: 40,
               child: CustomButton(
-                text: '다음 질문',
+                text: '제출하기',
                 right: true,backgroundcolor: Colors.white,
                 onPressed: () => Navigator.push(
                     context,

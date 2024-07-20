@@ -6,7 +6,9 @@ import 'components/custom_button.dart';
 import 'remind_question2_screen.dart';
 
 class RemindQuestion1Screen extends StatefulWidget {
-  const RemindQuestion1Screen({super.key});
+  final VoidCallback next;
+
+  const RemindQuestion1Screen({super.key, required this.next});
 
   @override
   State<RemindQuestion1Screen> createState() => _RemindQuestion1ScreenState();
@@ -104,11 +106,7 @@ class _RemindQuestion1ScreenState extends State<RemindQuestion1Screen> {
               child: CustomButton(
                 text: '다음 질문',
                 right: true,backgroundcolor: Colors.white,
-                onPressed: () => Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => RemindQuestion2Screen(),
-                    )),
+                onPressed: widget.next,
               ),
             ),
           ],
