@@ -192,6 +192,7 @@ class _StaticScreenState extends State<StaticScreen> {
               vertical: false,
               defaultRenderer: charts.BarRendererConfig(
                 cornerStrategy: const charts.ConstCornerStrategy(30),
+                maxBarWidthPx: 50,
                 barRendererDecorator: charts.BarLabelDecorator<String>(
                   insideLabelStyleSpec: charts.TextStyleSpec(
                     color: charts.MaterialPalette.black,

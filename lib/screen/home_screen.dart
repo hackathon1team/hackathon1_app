@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:memory_app/screen/static_screen.dart';
 
-import 'meco_question_screen.dart';
+import 'meco_question_start_screen.dart';
 import 'time_ledger_screen.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -26,7 +26,7 @@ class _HomeScreenState extends State<HomeScreen> {
   List<Widget> _widgetOptions() {
     return [
       TimeLedgerScreen(),
-      MecoQuestionScreen(),
+      MecoQuestionStartScreen(),
       StaticScreen(),
       Container(),
       Container(),

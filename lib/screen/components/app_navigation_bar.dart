@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:memory_app/screen/home_screen.dart';
 
 class AppNavigationBar extends StatelessWidget {
   final int currentIndex;
@@ -7,6 +8,7 @@ class AppNavigationBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
     return BottomNavigationBar(
       type: BottomNavigationBarType.fixed,
       backgroundColor: Color(0xFF73648E),
@@ -15,6 +17,12 @@ class AppNavigationBar extends StatelessWidget {
       selectedItemColor: Colors.white,
       unselectedItemColor: Color(0xFF564B6A),
       currentIndex: currentIndex,
+      onTap: (index) {
+        Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+                builder: (context) => HomeScreen(currentIndex: index)));
+      },
       items: [
         BottomNavigationBarItem(
             icon: Padding(

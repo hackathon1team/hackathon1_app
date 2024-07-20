@@ -1,16 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:memory_app/screen/components/custom_button.dart';
 import 'package:memory_app/screen/home_screen.dart';
+import 'package:memory_app/screen/meco_question_chat_screen.dart';
 
 
-class MecoQuestionScreen extends StatefulWidget {
-  const MecoQuestionScreen({super.key});
+class MecoQuestionStartScreen extends StatefulWidget {
+  const MecoQuestionStartScreen({super.key});
 
   @override
-  State<MecoQuestionScreen> createState() => _MecoQuestionScreenState();
+  State<MecoQuestionStartScreen> createState() => _MecoQuestionStartScreenState();
 }
 
-class _MecoQuestionScreenState extends State<MecoQuestionScreen> {
+class _MecoQuestionStartScreenState extends State<MecoQuestionStartScreen> {
   bool writed = true;
 
   bool isDropdownOpen = false;
@@ -198,7 +199,9 @@ class _MecoQuestionScreenState extends State<MecoQuestionScreen> {
                 CustomButton(
                     text: '대화하러',
                     right: true,
-                    onPressed: () {},
+                    onPressed: () {
+                      Navigator.of(context).push(MaterialPageRoute(builder: (context) => ChatScreen(event: selectedItem,),));
+                    },
                     backgroundcolor: Colors.white),
                 SizedBox(
                   height: 10,
