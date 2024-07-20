@@ -121,7 +121,117 @@ class _StaticScreenState extends State<StaticScreen> {
     );
   }
 
-  Widget lastMonthChart() {
+  Widget lastmonthChart() {
+    List<charts.Series<StaticMonth, String>> _createSampleData() {
+      final data = [
+        StaticMonth(7, '알바', 57),
+        StaticMonth(8, '공부', 62),
+      ];
+
+      return [
+        charts.Series<StaticMonth, String>(
+          id: '지난달 비교',
+          colorFn: (_, __) => charts.ColorUtil.fromDartColor(Color(0xFFFFE4A2)),
+          domainFn: (StaticMonth month, _) => '${month.month}월',
+          measureFn: (StaticMonth month, _) => month.value,
+          data: data,
+          labelAccessorFn: (StaticMonth month, _) =>
+              '${month.content} ${month.value}시간',
+        )
+      ];
+    }
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        Padding(
+          padding: const EdgeInsets.fromLTRB(20, 40, 20, 0),
+          child: Container(
+            height: 80,
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(60),
+            ),
+            child: Stack(
+              clipBehavior: Clip.none,
+              children: [
+                Positioned(
+                  top: -10,
+                  right: 10,
+                  child: Image.asset(
+                    'assets/components/star.png',
+                    // height: 40,
+                    // width: 40,
+                    scale: 0.7,
+                  ),
+                ),
+                Center(
+                  child: Text(
+                    '지난달과 비교하여\n시간을 한눈에 확인해 볼까요?',
+                    style: TextStyle(
+                      fontSize: 16,
+                      color: Color(0xFF5A639C),
+                      fontWeight: FontWeight.bold,
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+        SizedBox(
+          height: 20,
+        ),
+        Expanded(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 20),
+            child: charts.BarChart(
+              _createSampleData(),
+              animate: true,
+              vertical: false,
+              defaultRenderer: charts.BarRendererConfig(
+                cornerStrategy: const charts.ConstCornerStrategy(30),
+                barRendererDecorator: charts.BarLabelDecorator<String>(
+                  insideLabelStyleSpec: charts.TextStyleSpec(
+                    color: charts.MaterialPalette.black,
+                  ),
+                ),
+              ),
+              domainAxis: charts.OrdinalAxisSpec(
+                renderSpec: charts.SmallTickRendererSpec(
+                  labelStyle: charts.TextStyleSpec(
+                    color: charts.ColorUtil.fromDartColor(Colors.white),
+                    fontSize: 14,
+                  ),
+                  lineStyle: charts.LineStyleSpec(
+                    color: charts.ColorUtil.fromDartColor(Colors.transparent),
+                    thickness: 0, // domain axis 기준선 제거
+                  ),
+                ),
+                showAxisLine: false,
+              ),
+              primaryMeasureAxis: charts.NumericAxisSpec(
+                renderSpec: charts.GridlineRendererSpec(
+                  labelStyle: charts.TextStyleSpec(
+                    color: charts.ColorUtil.fromDartColor(
+                        Colors.transparent), // Label을 숨깁니다.
+                  ),
+                  lineStyle: charts.LineStyleSpec(
+                    color: charts.ColorUtil.fromDartColor(Colors.transparent),
+                    thickness: 0, // primaryMeasure axis 기준선 제거
+                  ),
+                ),
+                showAxisLine: false,
+              ),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget mostEmojiChart() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
@@ -231,8 +341,10 @@ class _StaticScreenState extends State<StaticScreen> {
                     final index = barTouchResponse.spot!.touchedBarGroupIndex;
                     // final key = mockData2.keys.elementAt(index);
                     // final value = mockData2[key];
-                    // _pageController.jumpToPage(index+2);
-                    _pageController.animateToPage(index+2, duration: Duration(milliseconds: 300), curve: Curves.easeInOut);
+                    _pageController.jumpToPage(index + 2);
+                    // _pageController.animateToPage(index + 2,
+                    //     duration: Duration(milliseconds: 300),
+                    //     curve: Curves.easeInOut);
                     // 여기에 원하는 동작을 추가할 수 있습니다.
                   }
                 },
@@ -635,7 +747,10 @@ class _StaticScreenState extends State<StaticScreen> {
                   child: mostTimeChart(),
                 ),
                 Glassmorphism(
-                  child: lastMonthChart(),
+                  child: lastmonthChart(),
+                ),
+                Glassmorphism(
+                  child: mostEmojiChart(),
                 ),
                 Glassmorphism(
                   child: positiveChart(),
@@ -687,4 +802,12 @@ class StaticEmoji {
   final int value;
 
   StaticEmoji(this.emoji, this.value);
+}
+
+class StaticMonth {
+  final int month;
+  final String content;
+  final int value;
+
+  StaticMonth(this.month, this.content, this.value);
 }
