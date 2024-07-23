@@ -13,7 +13,7 @@ class MecoQuestionSummaryScreen extends StatefulWidget {
 }
 
 class _MecoQuestionSummaryScreenState extends State<MecoQuestionSummaryScreen> {
-  bool writed = false;
+  bool writed = true;
 
   Widget _writeTrue() {
     return Expanded(
@@ -21,7 +21,7 @@ class _MecoQuestionSummaryScreenState extends State<MecoQuestionSummaryScreen> {
         itemCount: widget.chat!.length + 1,
         itemBuilder: (context, index) {
           if (index == 0) {
-            return Image.asset('assets/character/character5.png');
+            return Image.asset('assets/character/character4.png');
           }
           if (widget.chat![index - 1]['role'] == 'Meco') {
             if (widget.chat![index - 1]['index'] == 4) {
@@ -69,7 +69,7 @@ class _MecoQuestionSummaryScreenState extends State<MecoQuestionSummaryScreen> {
   Widget _writeFalse() {
     return Stack(
       children: [
-        Image.asset('assets/character/character5.png'),
+        Image.asset('assets/character/character4.png'),
         Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,

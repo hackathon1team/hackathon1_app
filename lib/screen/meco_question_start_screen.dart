@@ -151,7 +151,7 @@ class _MecoQuestionStartScreenState extends State<MecoQuestionStartScreen> {
             mainAxisSize: MainAxisSize.min,
             children: [
               Image.asset(
-                'assets/character/character4.png',
+                'assets/character/character3.png',
               ),
               SizedBox(height: 10), // 이미지와 드롭다운 사이에 작은 간격 추가
               Container(

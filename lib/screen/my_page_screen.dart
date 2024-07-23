@@ -68,7 +68,7 @@ class MyPageScreen extends StatelessWidget {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
-                          Image.asset('assets/character/character6.png'),
+                          Image.asset('assets/character/character5.png'),
                           Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [

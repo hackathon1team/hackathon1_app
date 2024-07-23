@@ -12,7 +12,7 @@ class TimeLedgerScreen extends StatefulWidget {
 }
 
 class _TimeLedgerScreenState extends State<TimeLedgerScreen> {
-  bool writed = true;
+  bool writed = false;
   int? selectedHour;
 
   DateTime _selectedDate = DateTime.now();
