@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:memory_app/cubit/id_jwt_cubit.dart';
 import 'package:memory_app/screen/login_screen.dart';
 import 'package:memory_app/screen/home_screen.dart';
 
@@ -13,23 +15,25 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Memory',
-      theme: ThemeData(
-        bottomNavigationBarTheme: BottomNavigationBarThemeData(
-          backgroundColor: Color(0xFF73648E),
-          selectedItemColor: Colors.white,
-          unselectedItemColor: Color(0xFF564B6A),
+    return BlocProvider(
+      create: (context) => IdJwtCubit(),
+      child: MaterialApp(
+        title: 'Memory',
+        theme: ThemeData(
+          bottomNavigationBarTheme: BottomNavigationBarThemeData(
+            backgroundColor: Color(0xFF73648E),
+            selectedItemColor: Colors.white,
+            unselectedItemColor: Color(0xFF564B6A),
+          ),
+          textTheme: GoogleFonts.interTextTheme(
+            Theme.of(context).textTheme,
+          ),
+          colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+          useMaterial3: true,
         ),
-        textTheme: GoogleFonts.interTextTheme(
-          Theme.of(context).textTheme,
-        ),
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-        useMaterial3: true,
+        debugShowCheckedModeBanner: false,
+        home: LoginScreen(),
       ),
-      debugShowCheckedModeBanner: false,
-      home: HomeScreen(currentIndex: 0,),
     );
   }
 }
-

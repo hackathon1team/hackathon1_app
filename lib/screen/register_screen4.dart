@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:memory_app/cubit/id_jwt_cubit.dart';
 
 
 import '../const/colors.dart';
@@ -8,14 +10,16 @@ import 'components/glassmorphism.dart';
 import 'meta_explain_screen.dart';
 
 class RegisterScreen4 extends StatefulWidget {
-  const RegisterScreen4({super.key});
+  final String name;
+  final String id;
+  const RegisterScreen4({super.key, required this.name, required this.id});
 
   @override
   State<RegisterScreen4> createState() => _RegisterScreen4State();
 }
 
 class _RegisterScreen4State extends State<RegisterScreen4> {
-  final TextEditingController nameController = TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
   bool obscure = true;
   double value = 0.75;
 
@@ -52,7 +56,7 @@ class _RegisterScreen4State extends State<RegisterScreen4> {
                     height: 40,
                   ),
                   TextField(
-                    controller: nameController,
+                    controller: passwordController,
                     style: TextStyle(
                       fontSize: 22,
                       fontWeight: FontWeight.w600,
@@ -110,6 +114,8 @@ class _RegisterScreen4State extends State<RegisterScreen4> {
                 text: '다음 질문',
                 right: true,backgroundcolor: Colors.white,
                 onPressed: () {
+                  final idjwt = context.read<IdJwtCubit>();
+                  idjwt.signUp(widget.name, widget.id, passwordController.text);
                   setState(() {
                     value = 1.0;
                   });

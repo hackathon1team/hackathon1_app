@@ -5,7 +5,8 @@ import 'components/custom_button.dart';
 import 'components/custom_progress_bar.dart';
 
 class RegisterScreen3 extends StatefulWidget {
-  const RegisterScreen3({super.key});
+  final String name;
+  const RegisterScreen3({super.key, required this.name});
 
   @override
   State<RegisterScreen3> createState() => _RegisterScreen3State();
@@ -167,7 +168,7 @@ class _RegisterScreen3State extends State<RegisterScreen3> {
                 onPressed: () => Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => RegisterScreen4(),
+                      builder: (context) => RegisterScreen4(name: widget.name, id: idController.text,),
                     )),
               ),
             ),

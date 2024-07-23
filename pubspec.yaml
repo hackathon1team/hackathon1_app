@@ -38,6 +38,10 @@ dependencies:
   fl_chart: ^0.68.0
   charts_flutter: ^0.12.0
   google_fonts: ^6.2.1
+  equatable: ^2.0.5
+  bloc: ^8.1.4
+  http:
+  flutter_bloc: ^8.1.6
 
 dev_dependencies:
   flutter_test:

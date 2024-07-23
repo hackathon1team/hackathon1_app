@@ -2,6 +2,7 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:memory_app/const/colors.dart';
 import 'package:memory_app/const/emoji.dart';
+import 'package:memory_app/model/static_model.dart';
 import 'package:memory_app/screen/components/glassmorphism.dart';
 import 'package:charts_flutter/flutter.dart' as charts;
 
@@ -816,17 +817,4 @@ class _StaticScreenState extends State<StaticScreen> {
   }
 }
 
-class StaticEmoji {
-  final String emoji;
-  final int value;
 
-  StaticEmoji(this.emoji, this.value);
-}
-
-class StaticMonth {
-  final int month;
-  final String content;
-  final int value;
-
-  StaticMonth(this.month, this.content, this.value);
-}

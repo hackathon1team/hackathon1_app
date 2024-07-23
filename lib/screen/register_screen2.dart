@@ -95,7 +95,7 @@ class _RegisterScreen2State extends State<RegisterScreen2> {
                 onPressed: () => Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => RegisterScreen3(),
+                      builder: (context) => RegisterScreen3(name: nameController.text,),
                     )),
               ),
             ),
