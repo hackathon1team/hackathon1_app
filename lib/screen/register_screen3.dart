@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:memory_app/account/account.dart';
 import 'package:memory_app/screen/register_screen4.dart';
 
 import 'components/custom_button.dart';
@@ -6,6 +7,7 @@ import 'components/custom_progress_bar.dart';
 
 class RegisterScreen3 extends StatefulWidget {
   final String name;
+
   const RegisterScreen3({super.key, required this.name});
 
   @override
@@ -118,16 +120,12 @@ class _RegisterScreen3State extends State<RegisterScreen3> {
                         width: 5,
                       ),
                       ElevatedButton(
-                        onPressed: () {
-                          if (duplicated == null) {
-                            setState(() {
-                              duplicated = true;
-                            });
-                          } else {
-                            setState(() {
-                              duplicated = !duplicated!;
-                            });
-                          }
+                        onPressed: () async {
+                          final isDuplicated = await Account().checkDuplicated(idController.text);
+                          print('중복확인: $isDuplicated');
+                          setState(() {
+                            duplicated = isDuplicated;
+                          });
                         },
                         style: ElevatedButton.styleFrom(
                           padding: const EdgeInsets.symmetric(horizontal: 10),
@@ -155,7 +153,8 @@ class _RegisterScreen3State extends State<RegisterScreen3> {
               left: 40,
               child: CustomButton(
                 text: '이전 질문',
-                right: false,backgroundcolor: Colors.white,
+                right: false,
+                backgroundcolor: Colors.white,
                 onPressed: () => Navigator.of(context).pop(),
               ),
             ),
@@ -164,12 +163,20 @@ class _RegisterScreen3State extends State<RegisterScreen3> {
               right: 40,
               child: CustomButton(
                 text: '다음 질문',
-                right: true,backgroundcolor: Colors.white,
-                onPressed: () => Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => RegisterScreen4(name: widget.name, id: idController.text,),
-                    )),
+                right: true,
+                backgroundcolor: Colors.white,
+                onPressed: () {
+                  if(duplicated == false){
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => RegisterScreen4(
+                            name: widget.name,
+                            id: idController.text,
+                          ),
+                        ));
+                  }
+                },
               ),
             ),
           ],

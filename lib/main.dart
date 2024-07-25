@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:memory_app/cubit/id_jwt_cubit.dart';
+import 'package:memory_app/cubit/name_jwt_cubit.dart';
 import 'package:memory_app/screen/login_screen.dart';
 import 'package:memory_app/screen/home_screen.dart';
 
@@ -16,7 +16,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => IdJwtCubit(),
+      create: (context) => NameJwtCubit(),
       child: MaterialApp(
         title: 'Memory',
         theme: ThemeData(

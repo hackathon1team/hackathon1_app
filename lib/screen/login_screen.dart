@@ -2,11 +2,12 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:memory_app/account/account.dart';
 import 'package:memory_app/screen/home_screen.dart';
 import 'package:memory_app/screen/register_screen1.dart';
 
 import '../const/colors.dart';
-import '../cubit/id_jwt_cubit.dart';
+import '../cubit/name_jwt_cubit.dart';
 import 'components/glassmorphism.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -98,15 +99,20 @@ class _LoginScreenState extends State<LoginScreen> {
                     height: 40,
                   ),
                   ElevatedButton(
-                    onPressed: () {
-                      final idJwtCubit = context.read<IdJwtCubit>();
-                      idJwtCubit.Login(
-                          idController.text, passwordController.text);
-                      Navigator.pushReplacement(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => HomeScreen(currentIndex: 0),
-                          ));
+                    onPressed: () async {
+                      final nameJwtCubit = context.read<NameJwtCubit>();
+                      final List<String> nameJwt = await Account()
+                          .login(idController.text, passwordController.text);
+                      if (nameJwt[0] == 'login failed') {
+                        //나중에 구현
+                      } else {
+                        nameJwtCubit.Login(nameJwt[0], nameJwt[1]);
+                        Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => HomeScreen(currentIndex: 0),
+                            ));
+                      }
                     },
                     child: Text(
                       '로그인',

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:memory_app/cubit/id_jwt_cubit.dart';
-
+import 'package:memory_app/account/account.dart';
+import 'package:memory_app/cubit/name_jwt_cubit.dart';
 
 import '../const/colors.dart';
 import 'components/custom_button.dart';
@@ -12,6 +12,7 @@ import 'meta_explain_screen.dart';
 class RegisterScreen4 extends StatefulWidget {
   final String name;
   final String id;
+
   const RegisterScreen4({super.key, required this.name, required this.id});
 
   @override
@@ -103,7 +104,8 @@ class _RegisterScreen4State extends State<RegisterScreen4> {
               left: 40,
               child: CustomButton(
                 text: '이전 질문',
-                right: false,backgroundcolor: Colors.white,
+                right: false,
+                backgroundcolor: Colors.white,
                 onPressed: () => Navigator.of(context).pop(),
               ),
             ),
@@ -111,84 +113,93 @@ class _RegisterScreen4State extends State<RegisterScreen4> {
               bottom: 40,
               right: 40,
               child: CustomButton(
-                text: '다음 질문',
-                right: true,backgroundcolor: Colors.white,
-                onPressed: () {
-                  final idjwt = context.read<IdJwtCubit>();
-                  idjwt.signUp(widget.name, widget.id, passwordController.text);
-                  setState(() {
-                    value = 1.0;
-                  });
-                  showGeneralDialog(
-                    barrierColor: Colors.black.withOpacity(0),
-                    context: context,
-                    pageBuilder: (context, animation, secondaryAnimation) {
-                      return Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                        child: Glassmorphism(
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Text(
-                                '회원가입 성공',
-                                style: TextStyle(
-                                  fontSize: 25,
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.bold,
-                                  decoration: TextDecoration.none,
-                                ),
-                              ),
-                              Image.asset('assets/character/character2.png'),
-                              Text(
-                                '이제,메코와 함께',
-                                style: TextStyle(
-                                  fontSize: 25,
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.bold,
-                                  decoration: TextDecoration.none,
-                                ),
-                              ),
-                              Text(
-                                '나에 대해 알아보아요.',
-                                style: TextStyle(
-                                  fontSize: 25,
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.bold,
-                                  decoration: TextDecoration.none,
-                                ),
-                              ),
-                              SizedBox(
-                                height: 20,
-                              ),
-                              ElevatedButton(
-                                onPressed: () => Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) => MetaExplainScreen(),
-                                    )),
-                                child: Text(
-                                  '시작하기',
+                text: '가입하기',
+                right: true,
+                backgroundcolor: Colors.white,
+                onPressed: () async {
+                  final nameJwtCubit = context.read<NameJwtCubit>();
+                  final int signupStatus = await Account()
+                      .signup(widget.name, widget.id, passwordController.text);
+                  if (signupStatus == 200) {
+                    final List<String> nameJwt = await Account()
+                        .login(widget.id, passwordController.text);
+                    nameJwtCubit.Login(nameJwt[0], nameJwt[1]);
+                    setState(() {
+                      value = 1.0;
+                    });
+                    showGeneralDialog(
+                      barrierColor: Colors.black.withOpacity(0),
+                      context: context,
+                      pageBuilder: (context, animation, secondaryAnimation) {
+                        return Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                          child: Glassmorphism(
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Text(
+                                  '회원가입 성공',
                                   style: TextStyle(
-                                    fontSize: 15,
-                                    color: buttonTextColor,
+                                    fontSize: 25,
+                                    color: Colors.white,
                                     fontWeight: FontWeight.bold,
+                                    decoration: TextDecoration.none,
                                   ),
                                 ),
-                                style: ElevatedButton.styleFrom(
-                                  padding: EdgeInsets.symmetric(horizontal: 30, vertical: 15),
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(10),
+                                Image.asset('assets/character/character2.png'),
+                                Text(
+                                  '이제,메코와 함께',
+                                  style: TextStyle(
+                                    fontSize: 25,
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold,
+                                    decoration: TextDecoration.none,
                                   ),
                                 ),
-                              ),
-                            ],
+                                Text(
+                                  '나에 대해 알아보아요.',
+                                  style: TextStyle(
+                                    fontSize: 25,
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold,
+                                    decoration: TextDecoration.none,
+                                  ),
+                                ),
+                                SizedBox(
+                                  height: 20,
+                                ),
+                                ElevatedButton(
+                                  onPressed: () => Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) =>
+                                            MetaExplainScreen(),
+                                      )),
+                                  child: Text(
+                                    '시작하기',
+                                    style: TextStyle(
+                                      fontSize: 15,
+                                      color: buttonTextColor,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                  style: ElevatedButton.styleFrom(
+                                    padding: EdgeInsets.symmetric(
+                                        horizontal: 30, vertical: 15),
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(10),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
                           ),
-                        ),
-                      );
-                    },
-                  );
+                        );
+                      },
+                    );
+                  }
                 },
               ),
             ),
