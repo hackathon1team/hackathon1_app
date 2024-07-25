@@ -42,6 +42,7 @@ dependencies:
   bloc: ^8.1.4
   http:
   flutter_bloc: ^8.1.6
+  intl: ^0.17.0
 
 dev_dependencies:
   flutter_test:

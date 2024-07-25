@@ -6,38 +6,38 @@ class NameJwtCubit extends Cubit<IdJwtCubitState> {
   NameJwtCubit() : super(InitIdJwtCubitState());
 
   Login(String loginJwt, String name) {
-    emit(LoginIdJwtCubitState(idJwt: NameJwt.login(loginJwt, name)));
+    emit(LoginIdJwtCubitState(nameJwt: NameJwt.login(loginJwt, name)));
   }
 
   Logout() {
-    emit(LogoutIdJwtCubitState(idJwt: NameJwt.logout()));
+    emit(LogoutIdJwtCubitState(nameJwt: NameJwt.logout()));
   }
 
 }
 
 abstract class IdJwtCubitState extends Equatable {
-  final NameJwt idJwt;
+  final NameJwt nameJwt;
 
-  const IdJwtCubitState({required this.idJwt});
+  const IdJwtCubitState({required this.nameJwt});
 }
 
 class InitIdJwtCubitState extends IdJwtCubitState {
-  InitIdJwtCubitState() : super(idJwt: NameJwt.init());
+  InitIdJwtCubitState() : super(nameJwt: NameJwt.init());
 
   @override
-  List<Object?> get props => [idJwt];
+  List<Object?> get props => [nameJwt];
 }
 
 class LoginIdJwtCubitState extends IdJwtCubitState {
-  const LoginIdJwtCubitState({required super.idJwt});
+  const LoginIdJwtCubitState({required super.nameJwt});
 
   @override
-  List<Object?> get props => [idJwt];
+  List<Object?> get props => [nameJwt];
 }
 
 class LogoutIdJwtCubitState extends IdJwtCubitState {
-  const LogoutIdJwtCubitState({required super.idJwt});
+  const LogoutIdJwtCubitState({required super.nameJwt});
 
   @override
-  List<Object?> get props => [idJwt];
+  List<Object?> get props => [nameJwt];
 }

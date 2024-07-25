@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:memory_app/cubit/time_ledger_list_cubit.dart';
 import 'package:memory_app/screen/static_screen.dart';
 
 import 'meco_question_start_screen.dart';
@@ -16,9 +18,6 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-
-
-
   void _onItemTapped(int index) {
     setState(() {
       widget.currentIndex = index;
@@ -27,10 +26,15 @@ class _HomeScreenState extends State<HomeScreen> {
 
   List<Widget> _widgetOptions() {
     return [
-      TimeLedgerScreen(),
+      BlocProvider(
+        create: (context) => TimeLedgerListCubit(),
+        child: TimeLedgerScreen(),
+      ),
       MecoQuestionStartScreen(),
       StaticScreen(),
-      RemindQuestionScreen(currentIndex: 0,),
+      RemindQuestionScreen(
+        currentIndex: 0,
+      ),
       MyPageScreen(),
     ];
   }
