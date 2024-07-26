@@ -57,6 +57,12 @@ class _TimeLedgerScreenState extends State<TimeLedgerScreen> {
         );
   }
 
+  void _deleteTimeLedger(int recordId) async{
+    await context.read<TimeLedgerListCubit>().deleteTimeLedger(
+      recordId, BlocProvider.of<NameJwtCubit>(context).state.nameJwt.jwt!,
+    );
+  }
+
   final boldStyle = TextStyle(
     fontSize: 21,
     fontWeight: FontWeight.bold,
@@ -272,7 +278,148 @@ class _TimeLedgerScreenState extends State<TimeLedgerScreen> {
                           padding: EdgeInsets.symmetric(vertical: 10),
                           itemBuilder: (context, index) {
                             return GestureDetector(
-                              onTap: () {},
+                              onTap: () {
+                                showModalBottomSheet(
+                                  backgroundColor: Color(0xFFCDCAE2),
+                                  context: context,
+                                  isScrollControlled: true,
+                                  builder: (context) {
+                                    return Wrap(
+                                      children: [
+                                        Container(
+                                          padding: const EdgeInsets.all(32.0),
+                                          height: MediaQuery.of(context).size.height *
+                                              0.45, // 원하는 높이로 설정 (예: 화면 높이의 60%)
+                                          child: Column(
+                                            children: [
+                                              Row(
+                                                mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
+                                                children: [
+                                                  Text(
+                                                    '${_selectedDate.month}월 ${_selectedDate.day}일 일정 추가',
+                                                    style: boldStyle,
+                                                  ),
+                                                  IconButton(
+                                                    onPressed: () {
+                                                      Navigator.of(context).pop();
+                                                    },
+                                                    icon: Icon(Icons.close),
+                                                  ),
+                                                ],
+                                              ),
+                                              SizedBox(
+                                                height: 20,
+                                              ),
+                                              Row(
+                                                children: [
+                                                  Text(
+                                                    '감정: ',
+                                                    style: boldStyle.copyWith(
+                                                        fontSize: 18),
+                                                  ),
+                                                  Text(
+                                                    '${Emoji[state.timeLedgerList.timeLedgerList[index].emotion]} ${state.timeLedgerList.timeLedgerList[index].emotion}',
+                                                    style: normalStyle,
+                                                  ),
+                                                ],
+                                              ),
+                                              SizedBox(
+                                                height: 15,
+                                              ),
+                                              Row(
+                                                children: [
+                                                  Text(
+                                                    '분류: ',
+                                                    style: boldStyle.copyWith(
+                                                        fontSize: 18),
+                                                  ),
+                                                  Text(
+                                                    '${state.timeLedgerList.timeLedgerList[index].category}',
+                                                    style: normalStyle,
+                                                  ),
+                                                ],
+                                              ),
+                                              SizedBox(
+                                                height: 15,
+                                              ),
+                                              Row(
+                                                children: [
+                                                  Text(
+                                                    '내용: ',
+                                                    style: boldStyle.copyWith(
+                                                        fontSize: 18),
+                                                  ),
+                                                  Text(
+                                                    '${state.timeLedgerList.timeLedgerList[index].contents}',
+                                                    style: normalStyle,
+                                                  ),
+                                                ],
+                                              ),
+                                              SizedBox(
+                                                height: 15,
+                                              ),
+                                              Row(
+                                                children: [
+                                                  Text(
+                                                    '시간: ',
+                                                    style: boldStyle.copyWith(
+                                                        fontSize: 18),
+                                                  ),
+                                                  Text(
+                                                    '${state.timeLedgerList.timeLedgerList[index].takedTime.toInt()}시간',
+                                                    style: normalStyle,
+                                                  ),
+                                                ],
+                                              ),
+                                              SizedBox(
+                                                height: 20,
+                                              ),
+                                              if(_selectedDate.year == DateTime.now().year &&
+                                                  _selectedDate.month == DateTime.now().month &&
+                                                  _selectedDate.day == DateTime.now().day)
+                                              Row(
+                                                mainAxisAlignment:
+                                                MainAxisAlignment.end,
+                                                children: [
+                                                  ElevatedButton(
+                                                    onPressed: () async{
+                                                      _deleteTimeLedger(state.timeLedgerList.timeLedgerList[index].recordId);
+                                                      Navigator.of(context).pop();
+                                                    },
+                                                    child: Text(
+                                                      '삭제',
+                                                      style: boldStyle.copyWith(
+                                                        fontSize: 17,
+                                                      ),
+                                                    ),
+                                                    style: ElevatedButton.styleFrom(
+                                                      padding: EdgeInsets.symmetric(
+                                                          vertical: 4, horizontal: 24),
+                                                      backgroundColor:
+                                                      Color(0xFFDDD9D9),
+                                                      shape: RoundedRectangleBorder(
+                                                        borderRadius:
+                                                        BorderRadius.circular(10),
+                                                      ),
+                                                      tapTargetSize:
+                                                      MaterialTapTargetSize
+                                                          .shrinkWrap,
+                                                      // 버튼 크기 줄이기
+                                                      minimumSize:
+                                                      Size(0, 36), // 최소 높이 설정
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ],
+                                    );
+                                  },
+                                );
+                              },
                               child: Row(
                                 children: [
                                   Expanded(

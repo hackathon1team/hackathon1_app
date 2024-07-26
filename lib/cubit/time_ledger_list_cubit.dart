@@ -73,10 +73,39 @@ class TimeLedgerListCubit extends Cubit<TimeLedgerListCubitState> {
             'takedTime': takedTime,
           }));
       if (response.statusCode == 201) {
-        emit(LoadedTimeLedgetListCubitState(timeLedgerList: state.timeLedgerList));
+        emit(LoadedTimeLedgetListCubitState(
+            timeLedgerList: state.timeLedgerList));
         loadTimeLedgerList(date, jwt);
       } else {
         throw Exception('시간가계부 추가 실패 ${response.statusCode}');
+      }
+    } catch (e) {
+      emit(ErrorTimeLedgetListCubitState(
+          timeLedgerList: state.timeLedgerList, errorMessage: e.toString()));
+    }
+  }
+
+  deleteTimeLedger(int recordId, String jwt) async {
+    try {
+      if (state is LoadingTimeLedgetListCubitState ||
+          state is ErrorTimeLedgetListCubitState) {
+        return;
+      }
+      emit(LoadingTimeLedgetListCubitState(
+          timeLedgerList: state.timeLedgerList));
+      final response = await http.delete(
+        Uri.parse('$_baseUrl/records/$recordId'),
+        headers: {
+          'Authorization': 'Bearer $jwt',
+          'Content-Type': 'application/json',
+        },
+      );
+      if (response.statusCode == 200) {
+        emit(LoadedTimeLedgetListCubitState(
+            timeLedgerList: state.timeLedgerList));
+        loadTimeLedgerList(state.timeLedgerList.date, jwt);
+      } else {
+        throw Exception('시간가계부 삭제 실패 ${response.statusCode}');
       }
     } catch (e) {
       emit(ErrorTimeLedgetListCubitState(
