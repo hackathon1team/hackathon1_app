@@ -68,4 +68,32 @@ class Account {
       throw Exception('로그인 실패: ${e.toString()}');
     }
   }
+
+  Future<int> logout(String jwt) async {
+    try {
+      final response = await http.get(
+        Uri.parse('$_baseUrl/logout'),
+        headers: {
+          'Authorization': 'Bearer $jwt',
+        },
+      );
+      return response.statusCode;
+    } catch (e) {
+      throw Exception('로그아웃 실패: ${e.toString()}');
+    }
+  }
+
+  Future<int> delete(String jwt) async {
+    try {
+      final response = await http.delete(
+        Uri.parse('$_baseUrl/account'),
+        headers: {
+          'Authorization': 'Bearer $jwt',
+        },
+      );
+      return response.statusCode;
+    } catch (e) {
+      throw Exception('회원 탈퇴 실패: ${e.toString()}');
+    }
+  }
 }

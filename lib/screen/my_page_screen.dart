@@ -1,12 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:glassmorphism_ui/glassmorphism_ui.dart';
+import 'package:memory_app/account/account.dart';
+import 'package:memory_app/cubit/name_jwt_cubit.dart';
 import 'package:memory_app/screen/components/my_glassmorphism.dart';
+import 'package:memory_app/screen/login_screen.dart';
 
 class MyPageScreen extends StatelessWidget {
   const MyPageScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final nameJwt = BlocProvider.of<NameJwtCubit>(context);
     return Scaffold(
       body: Container(
         decoration: BoxDecoration(
@@ -73,7 +78,7 @@ class MyPageScreen extends StatelessWidget {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                '배혜윤',
+                                nameJwt.state.nameJwt.name!,
                                 style: TextStyle(
                                   fontSize: 20,
                                   fontWeight: FontWeight.bold,
@@ -92,7 +97,19 @@ class MyPageScreen extends StatelessWidget {
                                 height: 5,
                               ),
                               MyGlassmorphism(
-                                onTap: () {},
+                                onTap: () async {
+                                  final int status = await Account()
+                                      .logout(nameJwt.state.nameJwt.jwt!);
+                                  if (status == 200) {
+                                    nameJwt.Logout();
+                                    Navigator.of(context).pushAndRemoveUntil(
+                                      MaterialPageRoute(
+                                        builder: (context) => LoginScreen(),
+                                      ),
+                                      (route) => false,
+                                    );
+                                  }
+                                },
                                 child: Padding(
                                   padding: const EdgeInsets.all(8.0),
                                   child: Text(
@@ -129,7 +146,19 @@ class MyPageScreen extends StatelessWidget {
                                 textAlign: TextAlign.center,
                               ),
                               MyGlassmorphism(
-                                onTap: () {},
+                                onTap: () async {
+                                  final int status = await Account()
+                                      .delete(nameJwt.state.nameJwt.jwt!);
+                                  if (status == 200) {
+                                    nameJwt.Logout();
+                                    Navigator.of(context).pushAndRemoveUntil(
+                                      MaterialPageRoute(
+                                        builder: (context) => LoginScreen(),
+                                      ),
+                                          (route) => false,
+                                    );
+                                  }
+                                },
                                 child: Padding(
                                   padding: EdgeInsets.all(5),
                                   child: Text(

@@ -145,13 +145,13 @@ class _TimeLedgerScreenState extends State<TimeLedgerScreen> {
     final TextStyle _rowStyle = TextStyle(
         fontSize: 16, fontWeight: FontWeight.normal, color: Colors.white);
 
-    if (state is ErrorTimeLedgetListCubitState) {
+    if (state is ErrorTimeLedgerListCubitState) {
       return Center(
         child: Text(state.errorMessage),
       );
     }
-    if (state is LoadedTimeLedgetListCubitState ||
-        state is LoadingTimeLedgetListCubitState) {
+    if (state is LoadedTimeLedgerListCubitState ||
+        state is LoadingTimeLedgerListCubitState) {
       return Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
