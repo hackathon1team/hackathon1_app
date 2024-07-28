@@ -55,10 +55,11 @@ class Account {
       print('로그인: ${response.statusCode}');
 
       if (response.statusCode == 200) {
-        final Map<String, dynamic> data = jsonDecode(response.body);
+        final decodedBody = utf8.decode(response.bodyBytes);
+        final data = jsonDecode(decodedBody);
         final String accessToken = data['accessToken'];
-        // final String userName = data['userName'];
-        return [accessToken, '이승훈'];
+        final String userName = data['userName'];
+        return [accessToken, userName];
       } else if (response.statusCode == 401) {
         return ['login failed'];
       } else {

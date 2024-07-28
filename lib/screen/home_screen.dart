@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:memory_app/cubit/meco_question_cubit.dart';
 import 'package:memory_app/cubit/time_ledger_list_cubit.dart';
 import 'package:memory_app/screen/static_screen.dart';
 
@@ -26,10 +27,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   List<Widget> _widgetOptions() {
     return [
-      BlocProvider(
-        create: (context) => TimeLedgerListCubit(),
-        child: TimeLedgerScreen(),
-      ),
+      TimeLedgerScreen(),
       MecoQuestionStartScreen(),
       StaticScreen(),
       RemindQuestionScreen(

@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:intl/intl.dart';
+import 'package:memory_app/cubit/meco_question_cubit.dart';
+import 'package:memory_app/cubit/name_jwt_cubit.dart';
 import 'package:memory_app/screen/components/custom_button.dart';
 import 'package:memory_app/screen/home_screen.dart';
 import 'package:memory_app/screen/meco_question_chat_screen.dart';
-
+import 'package:memory_app/screen/meco_question_summary_screen.dart';
 
 class MecoQuestionStartScreen extends StatefulWidget {
   const MecoQuestionStartScreen({super.key});
@@ -12,11 +16,50 @@ class MecoQuestionStartScreen extends StatefulWidget {
 }
 
 class _MecoQuestionStartScreenState extends State<MecoQuestionStartScreen> {
-  bool timeWrited = true;
+  bool isLoading = true;
+  String selectedContent = '';
+  List<String> contents = [];
 
-  bool isDropdownOpen = false;
-  String selectedItem = '친구 만나기';
-  List<String> items = ['공부하기', '운동하기', '알바하기', '친구 만나기', '게임하기', '책 읽기'];
+  @override
+  void initState() {
+    super.initState();
+    _checkAnswersAndNavigate();
+  }
+
+  Future<void> _checkAnswersAndNavigate() async {
+    final nameJwt = BlocProvider.of<NameJwtCubit>(context);
+    final today = DateFormat('yyyy-MM-dd').format(DateTime.now());
+
+    await context.read<MecoQuestionCubit>().loadQuestionAnswer(today, nameJwt.state.nameJwt.jwt!);
+
+    if (mounted) {
+      final state = context.read<MecoQuestionCubit>().state;
+      if (state is LoadedMecoQuestionCubitState && state.mecoQuestion.answers.isNotEmpty) {
+        Navigator.of(context).pushReplacement(MaterialPageRoute(
+          builder: (context) => MecoQuestionSummaryScreen(selectedDay: today),
+        ));
+      } else {
+        await _loadContentsList();
+        setState(() {
+          isLoading = false;
+        });
+      }
+    }
+  }
+
+  Future<void> _loadContentsList() async {
+    final nameJwt = BlocProvider.of<NameJwtCubit>(context);
+    final cubit = context.read<MecoQuestionCubit>();
+    final result = await cubit.loadContents(nameJwt.state.nameJwt.jwt!);
+    if (mounted) {
+      setState(() {
+        contents = result;
+        if (contents.isNotEmpty) {
+          selectedContent = contents[0];
+        }
+      });
+    }
+  }
 
   Widget _timeWriteFalse() {
     return Stack(
@@ -50,42 +93,39 @@ class _MecoQuestionStartScreenState extends State<MecoQuestionStartScreen> {
         Positioned(
           bottom: MediaQuery.of(context).size.height / 4,
           right: 30,
-          child: Positioned(
-            child: Container(
-              padding: EdgeInsets.fromLTRB(20, 20, 20, 10),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(30),
-                color: Colors.white,
-              ),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.end,
-                children: [
-                  Text(
-                    '먼저 시간가계부를 작성하러 갈까요?',
-                    style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.w600,
-                      color: Color(0xFF5A639C),
-                    ),
+          child: Container(
+            padding: EdgeInsets.fromLTRB(20, 20, 20, 10),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(30),
+              color: Colors.white,
+            ),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: [
+                Text(
+                  '먼저 시간가계부를 작성하러 갈까요?',
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.w600,
+                    color: Color(0xFF5A639C),
                   ),
-                  SizedBox(
-                    height: 10,
-                  ),
-                  CustomButton(
-                    text: '시간 가계부 가기',
-                    right: true,
-                    onPressed: () {
-                      Navigator.pushReplacement(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => HomeScreen(currentIndex: 0),
-                          ));
-                    },
-                    backgroundcolor: Color(0xFF9B86BD).withOpacity(0.41),
-                  ),
-                ],
-              ),
+                ),
+                SizedBox(height: 10),
+                CustomButton(
+                  text: '시간 가계부 가기',
+                  right: true,
+                  onPressed: () {
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => HomeScreen(currentIndex: 0),
+                      ),
+                    );
+                  },
+                  backgroundcolor: Color(0xFF9B86BD).withOpacity(0.41),
+                ),
+              ],
             ),
           ),
         ),
@@ -144,16 +184,14 @@ class _MecoQuestionStartScreenState extends State<MecoQuestionStartScreen> {
           ),
         ),
         Positioned(
-          top: MediaQuery.of(context).size.height / 3, // 화면 하단에서의 거리 조정
+          top: MediaQuery.of(context).size.height / 3,
           right: 20,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.end,
             mainAxisSize: MainAxisSize.min,
             children: [
-              Image.asset(
-                'assets/character/character3.png',
-              ),
-              SizedBox(height: 10), // 이미지와 드롭다운 사이에 작은 간격 추가
+              Image.asset('assets/character/character3.png'),
+              SizedBox(height: 10),
               Container(
                 width: MediaQuery.of(context).size.width - 30,
                 padding: EdgeInsets.symmetric(horizontal: 15, vertical: 10),
@@ -164,24 +202,18 @@ class _MecoQuestionStartScreenState extends State<MecoQuestionStartScreen> {
                 child: DropdownButtonHideUnderline(
                   child: DropdownButton<String>(
                     isExpanded: true,
-                    value: selectedItem,
+                    value: selectedContent,
                     dropdownColor: Color(0xFF5E5B88),
-                    icon: Icon(
-                      Icons.arrow_drop_down,
-                      color: Colors.white,
-                    ),
+                    icon: Icon(Icons.arrow_drop_down, color: Colors.white),
                     onChanged: (String? newValue) {
                       setState(() {
-                        selectedItem = newValue!;
+                        selectedContent = newValue!;
                       });
                     },
-                    items: items.map<DropdownMenuItem<String>>((String value) {
+                    items: contents.map<DropdownMenuItem<String>>((String value) {
                       return DropdownMenuItem<String>(
                         value: value,
-                        child: Text(
-                          value,
-                          style: TextStyle(color: Colors.white),
-                        ),
+                        child: Text(value, style: TextStyle(color: Colors.white)),
                       );
                     }).toList(),
                   ),
@@ -191,34 +223,43 @@ class _MecoQuestionStartScreenState extends State<MecoQuestionStartScreen> {
           ),
         ),
         Positioned(
-            bottom: 40,
-            right: 20,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.end,
-              children: [
-                CustomButton(
-                    text: '대화하러',
-                    right: true,
-                    onPressed: () {
-                      Navigator.of(context).push(MaterialPageRoute(builder: (context) => ChatScreen(event: selectedItem,),));
-                    },
-                    backgroundcolor: Colors.white),
-                SizedBox(
-                  height: 10,
-                ),
-                CustomButton(
-                    text: '이전 대화 보기',
-                    right: true,
-                    onPressed: () {},
-                    backgroundcolor: Colors.white),
-              ],
-            )),
+          bottom: 40,
+          right: 20,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: [
+              CustomButton(
+                text: '대화하러',
+                right: true,
+                onPressed: () {
+                  Navigator.of(context).push(MaterialPageRoute(
+                    builder: (context) => MecoQuestionChatScreen(event: selectedContent),
+                  ));
+                },
+                backgroundcolor: Colors.white,
+              ),
+              SizedBox(height: 10),
+              CustomButton(
+                text: '이전 대화 보기',
+                right: true,
+                onPressed: () {},
+                backgroundcolor: Colors.white,
+              ),
+            ],
+          ),
+        ),
       ],
     );
   }
 
   @override
   Widget build(BuildContext context) {
+    if (isLoading) {
+      return Scaffold(
+        body: Center(child: CircularProgressIndicator()),
+      );
+    }
+
     return Scaffold(
       body: Container(
         decoration: BoxDecoration(
@@ -227,7 +268,7 @@ class _MecoQuestionStartScreenState extends State<MecoQuestionStartScreen> {
             fit: BoxFit.cover,
           ),
         ),
-        child: timeWrited ? _timeWriteTrue() : _timeWriteFalse(),
+        child: contents.isEmpty ? _timeWriteFalse() : _timeWriteTrue(),
       ),
     );
   }

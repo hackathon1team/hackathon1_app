@@ -1,25 +1,32 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:intl/intl.dart';
+import 'package:memory_app/const/questions.dart';
+import 'package:memory_app/cubit/meco_question_cubit.dart';
+import 'package:memory_app/cubit/name_jwt_cubit.dart';
 import 'package:memory_app/screen/meco_question_summary_screen.dart';
 
 import '../const/colors.dart';
 import 'components/app_navigation_bar.dart';
 
-class ChatScreen extends StatefulWidget {
+class MecoQuestionChatScreen extends StatefulWidget {
   final String event;
 
-  const ChatScreen({
+  const MecoQuestionChatScreen({
     super.key,
     required this.event,
   });
 
   @override
-  State<ChatScreen> createState() => _ChatScreenState();
+  State<MecoQuestionChatScreen> createState() => _MecoQuestionChatScreenState();
 }
 
-class _ChatScreenState extends State<ChatScreen> {
+class _MecoQuestionChatScreenState extends State<MecoQuestionChatScreen> {
   bool loading = false;
   List textChat = [];
-  String name = '태기';
+  late String name;
   int currentIndex = 1;
 
   final TextEditingController _textController = TextEditingController();
@@ -28,16 +35,25 @@ class _ChatScreenState extends State<ChatScreen> {
   @override
   void initState() {
     super.initState();
+    loadName();
     fromText(query: widget.event, index: -1);
+  }
+
+  void loadName() {
+    final nameJwt = BlocProvider.of<NameJwtCubit>(context);
+    setState(() {
+      name = nameJwt.state.nameJwt.name!;
+    });
   }
 
   // Text only input
   void fromText({required String query, required int index}) {
+    final random = Random();
     List question = [
       '오늘의 인상깊은 사건은 무엇인가요?',
       '이 사건에 대한 감정은 무엇이고 원인은 무엇인가요?',
-      '이 감정을 어떻게 표현했어요?',
-      '이 상황을 통해 무엇을 배울 수 있을까요?',
+      secondQuestions[random.nextInt(secondQuestions.length)],
+      thirdQuestions[random.nextInt(thirdQuestions.length)],
       '그렇군요. $name님 오늘 하루도 고생 많으셨어요 !',
     ];
 
@@ -250,10 +266,29 @@ class _ChatScreenState extends State<ChatScreen> {
                     right: 30,
                     bottom: 30,
                     child: GestureDetector(
-                      onTap: () {
+                      onTap: () async{
                         fromText(
-                            query: _textController.text,
-                            index: currentIndex);
+                            query: _textController.text, index: currentIndex);
+                        if (currentIndex == 3) {
+                          final nameJwt =
+                              BlocProvider.of<NameJwtCubit>(context);
+                          print('시작');
+                          await context.read<MecoQuestionCubit>().answerQuestion(
+                                widget.event,
+                                [
+                                  textChat[2]['text'],
+                                  textChat[4]['text'],
+                                  textChat[6]['text'],
+                                ],
+                                [
+                                  textChat[3]['text'],
+                                  textChat[5]['text'],
+                                  textChat[7]['text'],
+                                ],
+                                nameJwt.state.nameJwt.jwt!,
+                              );
+                          print('끝');
+                        }
                         setState(() {
                           currentIndex += 1;
                         });
@@ -284,8 +319,9 @@ class _ChatScreenState extends State<ChatScreen> {
                   Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) =>
-                            MecoQuestionSummaryScreen(chat: textChat, selectedDay: DateTime.now(),),
+                        builder: (context) => MecoQuestionSummaryScreen(
+                          selectedDay: DateFormat('yyyy-MM-dd').format(DateTime.now()),
+                        ),
                       ));
                 },
                 child: Text(

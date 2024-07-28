@@ -39,13 +39,11 @@ class _TimeLedgerScreenState extends State<TimeLedgerScreen> {
     await cubit.loadTimeLedgerList(
         _selectedDateOnly, nameJwt.state.nameJwt.jwt!);
 
-    setState(() {
-
-    });
+    setState(() {});
   }
 
   void _addTimeLedger(String emotion, String emotionCategory, String category,
-      String content, double hours) async{
+      String content, double hours) async {
     await context.read<TimeLedgerListCubit>().addTimeLedger(
           _selectedDateOnly,
           emotion,
@@ -57,10 +55,11 @@ class _TimeLedgerScreenState extends State<TimeLedgerScreen> {
         );
   }
 
-  void _deleteTimeLedger(int recordId) async{
+  void _deleteTimeLedger(int recordId) async {
     await context.read<TimeLedgerListCubit>().deleteTimeLedger(
-      recordId, BlocProvider.of<NameJwtCubit>(context).state.nameJwt.jwt!,
-    );
+          recordId,
+          BlocProvider.of<NameJwtCubit>(context).state.nameJwt.jwt!,
+        );
   }
 
   final boldStyle = TextStyle(
@@ -288,13 +287,17 @@ class _TimeLedgerScreenState extends State<TimeLedgerScreen> {
                                       children: [
                                         Container(
                                           padding: const EdgeInsets.all(32.0),
-                                          height: MediaQuery.of(context).size.height *
-                                              0.45, // 원하는 높이로 설정 (예: 화면 높이의 60%)
+                                          height: MediaQuery.of(context)
+                                                  .size
+                                                  .height *
+                                              0.45,
+                                          // 원하는 높이로 설정 (예: 화면 높이의 60%)
                                           child: Column(
                                             children: [
                                               Row(
                                                 mainAxisAlignment:
-                                                MainAxisAlignment.spaceBetween,
+                                                    MainAxisAlignment
+                                                        .spaceBetween,
                                                 children: [
                                                   Text(
                                                     '${_selectedDate.month}월 ${_selectedDate.day}일 일정 추가',
@@ -302,7 +305,8 @@ class _TimeLedgerScreenState extends State<TimeLedgerScreen> {
                                                   ),
                                                   IconButton(
                                                     onPressed: () {
-                                                      Navigator.of(context).pop();
+                                                      Navigator.of(context)
+                                                          .pop();
                                                     },
                                                     icon: Icon(Icons.close),
                                                   ),
@@ -375,43 +379,57 @@ class _TimeLedgerScreenState extends State<TimeLedgerScreen> {
                                               SizedBox(
                                                 height: 20,
                                               ),
-                                              if(_selectedDate.year == DateTime.now().year &&
-                                                  _selectedDate.month == DateTime.now().month &&
-                                                  _selectedDate.day == DateTime.now().day)
-                                              Row(
-                                                mainAxisAlignment:
-                                                MainAxisAlignment.end,
-                                                children: [
-                                                  ElevatedButton(
-                                                    onPressed: () async{
-                                                      _deleteTimeLedger(state.timeLedgerList.timeLedgerList[index].recordId);
-                                                      Navigator.of(context).pop();
-                                                    },
-                                                    child: Text(
-                                                      '삭제',
-                                                      style: boldStyle.copyWith(
-                                                        fontSize: 17,
+                                              if (_selectedDate.year ==
+                                                      DateTime.now().year &&
+                                                  _selectedDate.month ==
+                                                      DateTime.now().month &&
+                                                  _selectedDate.day ==
+                                                      DateTime.now().day)
+                                                Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.end,
+                                                  children: [
+                                                    ElevatedButton(
+                                                      onPressed: () async {
+                                                        _deleteTimeLedger(state
+                                                            .timeLedgerList
+                                                            .timeLedgerList[
+                                                                index]
+                                                            .recordId);
+                                                        Navigator.of(context)
+                                                            .pop();
+                                                      },
+                                                      child: Text(
+                                                        '삭제',
+                                                        style:
+                                                            boldStyle.copyWith(
+                                                          fontSize: 17,
+                                                        ),
+                                                      ),
+                                                      style: ElevatedButton
+                                                          .styleFrom(
+                                                        padding: EdgeInsets
+                                                            .symmetric(
+                                                                vertical: 4,
+                                                                horizontal: 24),
+                                                        backgroundColor:
+                                                            Color(0xFFDDD9D9),
+                                                        shape:
+                                                            RoundedRectangleBorder(
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(10),
+                                                        ),
+                                                        tapTargetSize:
+                                                            MaterialTapTargetSize
+                                                                .shrinkWrap,
+                                                        // 버튼 크기 줄이기
+                                                        minimumSize: Size(
+                                                            0, 36), // 최소 높이 설정
                                                       ),
                                                     ),
-                                                    style: ElevatedButton.styleFrom(
-                                                      padding: EdgeInsets.symmetric(
-                                                          vertical: 4, horizontal: 24),
-                                                      backgroundColor:
-                                                      Color(0xFFDDD9D9),
-                                                      shape: RoundedRectangleBorder(
-                                                        borderRadius:
-                                                        BorderRadius.circular(10),
-                                                      ),
-                                                      tapTargetSize:
-                                                      MaterialTapTargetSize
-                                                          .shrinkWrap,
-                                                      // 버튼 크기 줄이기
-                                                      minimumSize:
-                                                      Size(0, 36), // 최소 높이 설정
-                                                    ),
-                                                  ),
-                                                ],
-                                              ),
+                                                  ],
+                                                ),
                                             ],
                                           ),
                                         ),
@@ -502,20 +520,20 @@ class _TimeLedgerScreenState extends State<TimeLedgerScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: BlocBuilder<TimeLedgerListCubit, TimeLedgerListCubitState>(
-        buildWhen: (previous, current) => previous != current,
+          buildWhen: (previous, current) => previous != current,
           builder: (context, state) {
-        return Container(
-          decoration: BoxDecoration(
-            image: DecorationImage(
-              image: AssetImage('assets/background/background6.png'),
-              fit: BoxFit.cover,
-            ),
-          ),
-          child: state.timeLedgerList.timeLedgerList.isEmpty
-              ? _writeFalse(state)
-              : _writeTrue(state),
-        );
-      }),
+            return Container(
+              decoration: BoxDecoration(
+                image: DecorationImage(
+                  image: AssetImage('assets/background/background6.png'),
+                  fit: BoxFit.cover,
+                ),
+              ),
+              child: state.timeLedgerList.timeLedgerList.isEmpty
+                  ? _writeFalse(state)
+                  : _writeTrue(state),
+            );
+          }),
       floatingActionButton: Column(
         mainAxisAlignment: MainAxisAlignment.end,
         crossAxisAlignment: CrossAxisAlignment.end,
@@ -1065,7 +1083,7 @@ class _TimeLedgerScreenState extends State<TimeLedgerScreen> {
                                             MainAxisAlignment.end,
                                         children: [
                                           ElevatedButton(
-                                            onPressed: () async{
+                                            onPressed: () async {
                                               _addTimeLedger(
                                                   selectedEmotion!,
                                                   selectedEmotionCategory!,
