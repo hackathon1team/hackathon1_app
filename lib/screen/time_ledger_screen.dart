@@ -549,6 +549,7 @@ class _TimeLedgerScreenState extends State<TimeLedgerScreen> {
                     border: Border.all(color: Colors.white, width: 5),
                   ),
                   child: FloatingActionButton(
+                    heroTag: 'add TimeLedger',
                     onPressed: () {
                       showModalBottomSheet(
                         backgroundColor: Color(0xFFCDCAE2),
@@ -1153,6 +1154,7 @@ class _TimeLedgerScreenState extends State<TimeLedgerScreen> {
               border: Border.all(color: Color(0xFFFFE9E9), width: 5),
             ),
             child: FloatingActionButton(
+              heroTag: 'selectDate',
               onPressed: () => _selectDate(context),
               backgroundColor: Colors.transparent,
               foregroundColor: Color(0xFFFFE9E9),

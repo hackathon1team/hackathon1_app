@@ -3,8 +3,8 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 
 class Account {
-  final String _baseUrl = 'http://15.165.154.126:8080/api/v1';
-
+  final String _baseUrl = 'https://memorymeta.store/api/v1';
+  // http://15.165.154.126:8080
   // 'http://3.36.130.52:8080/api/v1';
 
   Future<int> signup(String name, String userId, String userPw) async {

@@ -4,6 +4,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:memory_app/cubit/meco_question_cubit.dart';
 import 'package:memory_app/cubit/meta_question_cubit.dart';
 import 'package:memory_app/cubit/name_jwt_cubit.dart';
+import 'package:memory_app/cubit/static_list_cubit.dart';
 import 'package:memory_app/screen/login_screen.dart';
 import 'package:memory_app/screen/home_screen.dart';
 
@@ -25,6 +26,7 @@ class MyApp extends StatelessWidget {
         BlocProvider(create: (context) => MecoQuestionCubit()),
         BlocProvider(create: (context) => TimeLedgerListCubit()),
         BlocProvider(create: (context) => MetaQuestionCubit()),
+        BlocProvider(create: (context) => StaticListCubit()),
       ],
       child: MaterialApp(
         title: 'Memory',

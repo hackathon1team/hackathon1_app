@@ -7,7 +7,7 @@ import 'package:memory_app/model/time_ledger_list.dart';
 import 'package:http/http.dart' as http;
 
 class TimeLedgerListCubit extends Cubit<TimeLedgerListCubitState> {
-  final _baseUrl = 'http://15.165.154.126:8080/api/v1/time-ledger';
+  final _baseUrl = 'https://memorymeta.store/api/v1/time-ledger';
 
   TimeLedgerListCubit() : super(InitTimeLedgerListCubitState());
 

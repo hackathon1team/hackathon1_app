@@ -7,7 +7,7 @@ import 'package:http/http.dart' as http;
 import 'package:memory_app/model/meta_question.dart';
 
 class MetaQuestionCubit extends Cubit<MetaQuestionCubitState> {
-  final _baseUrl = 'http://15.165.154.126:8080/api/v1';
+  final _baseUrl = 'https://memorymeta.store/api/v1';
 
   MetaQuestionCubit() : super(InitMetaQuestionCubitState());
 

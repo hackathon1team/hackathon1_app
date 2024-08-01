@@ -6,7 +6,7 @@ import 'package:memory_app/model/meco_question.dart';
 import 'package:http/http.dart' as http;
 
 class MecoQuestionCubit extends Cubit<MecoQuestionCubitState> {
-  final _baseUrl = 'http://15.165.154.126:8080/api/v1';
+  final _baseUrl = 'https://memorymeta.store/api/v1';
 
   MecoQuestionCubit() : super(InitMecoQuestionCubitState());
 
