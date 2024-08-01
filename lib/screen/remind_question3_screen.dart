@@ -1,14 +1,25 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:memory_app/const/colors.dart';
 import 'package:memory_app/screen/components/custom_progress_bar.dart';
 import 'package:memory_app/screen/remind_question4_screen.dart';
 
+import '../cubit/meta_question_cubit.dart';
 import 'components/custom_button.dart';
 
 class RemindQuestion3Screen extends StatefulWidget {
   final VoidCallback next;
   final VoidCallback previous;
-  const RemindQuestion3Screen({super.key, required this.next, required this.previous});
+  final String answer3;
+  final Function(String) onAnswerChanged;
+
+  const RemindQuestion3Screen({
+    super.key,
+    required this.next,
+    required this.previous,
+    required this.answer3,
+    required this.onAnswerChanged,
+  });
 
   @override
   State<RemindQuestion3Screen> createState() => _RemindQuestion3ScreenState();
@@ -16,6 +27,24 @@ class RemindQuestion3Screen extends StatefulWidget {
 
 class _RemindQuestion3ScreenState extends State<RemindQuestion3Screen> {
   TextEditingController questionController_3 = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    questionController_3 = TextEditingController(text: widget.answer3);
+    questionController_3.addListener(_onTextChanged);
+  }
+
+  void _onTextChanged() {
+    widget.onAnswerChanged(questionController_3.text);
+  }
+
+  @override
+  void dispose() {
+    questionController_3.removeListener(_onTextChanged);
+    questionController_3.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -60,7 +89,9 @@ class _RemindQuestion3ScreenState extends State<RemindQuestion3Screen> {
                     height: 20,
                   ),
                   CustomProgressBar(value: 0.6),
-                  SizedBox(height: 20,),
+                  SizedBox(
+                    height: 20,
+                  ),
                   Container(
                     height: 200,
                     child: TextFormField(
@@ -96,7 +127,8 @@ class _RemindQuestion3ScreenState extends State<RemindQuestion3Screen> {
               left: 40,
               child: CustomButton(
                 text: '이전 질문',
-                right: false,backgroundcolor: Colors.white,
+                right: false,
+                backgroundcolor: Colors.white,
                 onPressed: widget.previous,
               ),
             ),
@@ -105,8 +137,9 @@ class _RemindQuestion3ScreenState extends State<RemindQuestion3Screen> {
               right: 40,
               child: CustomButton(
                 text: '다음 질문',
-                right: true,backgroundcolor: Colors.white,
-                onPressed:widget.next,
+                right: true,
+                backgroundcolor: Colors.white,
+                onPressed: widget.next,
               ),
             ),
           ],

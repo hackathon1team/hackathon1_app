@@ -110,6 +110,10 @@ class MecoQuestionCubit extends Cubit<MecoQuestionCubitState> {
       ));
     }
   }
+
+  void logout(){
+    emit(InitMecoQuestionCubitState());
+  }
 }
 
 abstract class MecoQuestionCubitState extends Equatable {

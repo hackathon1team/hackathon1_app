@@ -2,7 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:glassmorphism_ui/glassmorphism_ui.dart';
 import 'package:memory_app/account/account.dart';
+import 'package:memory_app/cubit/meco_question_cubit.dart';
+import 'package:memory_app/cubit/meta_question_cubit.dart';
 import 'package:memory_app/cubit/name_jwt_cubit.dart';
+import 'package:memory_app/cubit/time_ledger_list_cubit.dart';
 import 'package:memory_app/screen/components/my_glassmorphism.dart';
 import 'package:memory_app/screen/login_screen.dart';
 
@@ -12,6 +15,9 @@ class MyPageScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final nameJwt = BlocProvider.of<NameJwtCubit>(context);
+    final meta = BlocProvider.of<MetaQuestionCubit>(context);
+    final meco = BlocProvider.of<MecoQuestionCubit>(context);
+    final time = BlocProvider.of<TimeLedgerListCubit>(context);
     return Scaffold(
       body: Container(
         decoration: BoxDecoration(
@@ -102,6 +108,9 @@ class MyPageScreen extends StatelessWidget {
                                       .logout(nameJwt.state.nameJwt.jwt!);
                                   if (status == 200) {
                                     nameJwt.Logout();
+                                    meco.logout();
+                                    meta.logout();
+                                    time.logout();
                                     Navigator.of(context).pushAndRemoveUntil(
                                       MaterialPageRoute(
                                         builder: (context) => LoginScreen(),
@@ -151,6 +160,9 @@ class MyPageScreen extends StatelessWidget {
                                       .delete(nameJwt.state.nameJwt.jwt!);
                                   if (status == 200) {
                                     nameJwt.Logout();
+                                    meco.logout();
+                                    meta.logout();
+                                    time.logout();
                                     Navigator.of(context).pushAndRemoveUntil(
                                       MaterialPageRoute(
                                         builder: (context) => LoginScreen(),

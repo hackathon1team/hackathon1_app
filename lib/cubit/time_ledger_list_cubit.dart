@@ -112,6 +112,10 @@ class TimeLedgerListCubit extends Cubit<TimeLedgerListCubitState> {
           timeLedgerList: state.timeLedgerList, errorMessage: e.toString()));
     }
   }
+
+  void logout(){
+    emit(InitTimeLedgerListCubitState());
+  }
 }
 
 abstract class TimeLedgerListCubitState extends Equatable {

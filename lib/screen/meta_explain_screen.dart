@@ -182,7 +182,7 @@ class _MetaExplainScreenState extends State<MetaExplainScreen> {
                   onPressed: () => Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => RemindQuestionScreen(currentIndex: 0,),
+                        builder: (context) => RemindQuestionScreen(currentIndex: 0, register: true,),
                       )),
                 ),
               ),

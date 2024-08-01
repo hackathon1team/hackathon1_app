@@ -1,14 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:memory_app/const/colors.dart';
+import 'package:memory_app/cubit/meta_question_cubit.dart';
+import 'package:memory_app/cubit/name_jwt_cubit.dart';
 import 'package:memory_app/screen/components/custom_progress_bar.dart';
 
 import 'components/custom_button.dart';
-import 'remind_question2_screen.dart';
 
 class RemindQuestion1Screen extends StatefulWidget {
   final VoidCallback next;
+  final String answer1;
+  final bool register;
+  final Function(String) onAnswerChanged;
 
-  const RemindQuestion1Screen({super.key, required this.next});
+  const RemindQuestion1Screen({super.key, required this.next, required this.answer1, required this.onAnswerChanged, required this.register});
 
   @override
   State<RemindQuestion1Screen> createState() => _RemindQuestion1ScreenState();
@@ -16,6 +21,24 @@ class RemindQuestion1Screen extends StatefulWidget {
 
 class _RemindQuestion1ScreenState extends State<RemindQuestion1Screen> {
   TextEditingController questionController_1 = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    questionController_1 = TextEditingController(text: widget.answer1);
+    questionController_1.addListener(_onTextChanged);
+  }
+
+  void _onTextChanged() {
+    widget.onAnswerChanged(questionController_1.text);
+  }
+
+  @override
+  void dispose() {
+    questionController_1.removeListener(_onTextChanged);
+    questionController_1.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -91,6 +114,7 @@ class _RemindQuestion1ScreenState extends State<RemindQuestion1Screen> {
                 ],
               ),
             ),
+            if(widget.register)
             Positioned(
               bottom: 40,
               left: 40,

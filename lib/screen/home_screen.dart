@@ -32,6 +32,7 @@ class _HomeScreenState extends State<HomeScreen> {
       StaticScreen(),
       RemindQuestionScreen(
         currentIndex: 0,
+        register: false,
       ),
       MyPageScreen(),
     ];

@@ -14,7 +14,7 @@ class Account {
             'Content-Type': 'application/json', // 올바른 Content-Type 설정
           },
           body: jsonEncode({
-            'name': name,
+            'userName': name,
             'userId': userId,
             'userPw': userPw,
           }));
@@ -57,6 +57,7 @@ class Account {
       if (response.statusCode == 200) {
         final decodedBody = utf8.decode(response.bodyBytes);
         final data = jsonDecode(decodedBody);
+        print('데이터: $data');
         final String accessToken = data['accessToken'];
         final String userName = data['userName'];
         return [accessToken, userName];
