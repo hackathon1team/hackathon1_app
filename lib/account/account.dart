@@ -4,6 +4,7 @@ import 'package:http/http.dart' as http;
 
 class Account {
   final String _baseUrl = 'https://memorymeta.store/api/v1';
+  // https://api.matameco.shop
   // http://15.165.154.126:8080
   // 'http://3.36.130.52:8080/api/v1';
 
@@ -53,6 +54,7 @@ class Account {
         }),
       );
       print('로그인: ${response.statusCode}');
+      print(response.body);
 
       if (response.statusCode == 200) {
         final decodedBody = utf8.decode(response.bodyBytes);
@@ -61,7 +63,7 @@ class Account {
         final String accessToken = data['accessToken'];
         final String userName = data['userName'];
         return [accessToken, userName];
-      } else if (response.statusCode == 401) {
+      } else if (response.statusCode == 400) {
         return ['login failed'];
       } else {
         throw Exception('서버 오류: ${response.statusCode}');

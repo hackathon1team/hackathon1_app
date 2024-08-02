@@ -5,6 +5,7 @@ import 'package:memory_app/cubit/meco_question_cubit.dart';
 import 'package:memory_app/cubit/meta_question_cubit.dart';
 import 'package:memory_app/cubit/name_jwt_cubit.dart';
 import 'package:memory_app/cubit/static_list_cubit.dart';
+import 'package:memory_app/screen/components/navigation_service.dart';
 import 'package:memory_app/screen/login_screen.dart';
 import 'package:memory_app/screen/home_screen.dart';
 
@@ -41,9 +42,11 @@ class MyApp extends StatelessWidget {
           ),
           colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
           useMaterial3: true,
+
         ),
         debugShowCheckedModeBanner: false,
         home: LoginScreen(),
+        navigatorKey: NavigationService.navigatorKey,
       ),
     );
   }

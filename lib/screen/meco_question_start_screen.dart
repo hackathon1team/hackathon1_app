@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
+import 'package:memory_app/const/colors.dart';
 import 'package:memory_app/cubit/meco_question_cubit.dart';
 import 'package:memory_app/cubit/name_jwt_cubit.dart';
 import 'package:memory_app/screen/components/custom_button.dart';
@@ -12,38 +13,46 @@ class MecoQuestionStartScreen extends StatefulWidget {
   const MecoQuestionStartScreen({super.key});
 
   @override
-  State<MecoQuestionStartScreen> createState() => _MecoQuestionStartScreenState();
+  State<MecoQuestionStartScreen> createState() =>
+      _MecoQuestionStartScreenState();
 }
 
 class _MecoQuestionStartScreenState extends State<MecoQuestionStartScreen> {
   bool isLoading = true;
+  bool hasAnswered = false;
   String selectedContent = '';
   List<String> contents = [];
 
   @override
   void initState() {
     super.initState();
-    _checkAnswersAndNavigate();
+    _loadData();
   }
 
-  Future<void> _checkAnswersAndNavigate() async {
+  Future<void> _loadData() async {
     final nameJwt = BlocProvider.of<NameJwtCubit>(context);
     final today = DateFormat('yyyy-MM-dd').format(DateTime.now());
 
-    await context.read<MecoQuestionCubit>().loadQuestionAnswer(today, nameJwt.state.nameJwt.jwt!);
+    // 질문과 답변 로드
+    await context
+        .read<MecoQuestionCubit>()
+        .loadQuestionAnswer(today, nameJwt.state.nameJwt.jwt!);
 
     if (mounted) {
       final state = context.read<MecoQuestionCubit>().state;
-      if (state is LoadedMecoQuestionCubitState && state.mecoQuestion.answers.isNotEmpty) {
-        Navigator.of(context).pushReplacement(MaterialPageRoute(
-          builder: (context) => MecoQuestionSummaryScreen(selectedDay: today),
-        ));
-      } else {
-        await _loadContentsList();
+      if (state is LoadedMecoQuestionCubitState &&
+          state.mecoQuestion.answers.isNotEmpty) {
         setState(() {
-          isLoading = false;
+          hasAnswered = true;
         });
+      } else {
+        // 콘텐츠 목록 로드
+        await _loadContentsList();
       }
+
+      setState(() {
+        isLoading = false;
+      });
     }
   }
 
@@ -59,6 +68,131 @@ class _MecoQuestionStartScreenState extends State<MecoQuestionStartScreen> {
         }
       });
     }
+  }
+
+  Future<void> _selectDate(BuildContext context) async {
+    final DateTime? pickedDate = await showDatePicker(
+      context: context,
+      initialDate: DateTime.now(),
+      firstDate: DateTime(2000),
+      lastDate: DateTime.now(),
+    );
+    if (pickedDate != null) {
+      final String selectedDateOnly =
+          DateFormat('yyyy-MM-dd').format(pickedDate);
+      Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) =>
+                MecoQuestionSummaryScreen(selectedDay: selectedDateOnly),
+          ));
+    }
+  }
+
+  Widget _alreadyAnswered() {
+    final cubit = BlocProvider.of<MecoQuestionCubit>(context);
+    return Stack(
+      children: [
+        Positioned(
+          top: MediaQuery.of(context).size.height / 5,
+          left: 20,
+          child: Container(
+            padding: EdgeInsets.fromLTRB(20, 25, 20, 20),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(30),
+            ),
+            child: Stack(
+              clipBehavior: Clip.none,
+              children: [
+                Positioned(
+                  top: -35,
+                  right: -20,
+                  child: Image.asset(
+                    'assets/components/star.png',
+                    scale: 0.6,
+                  ),
+                ),
+                Positioned(
+                  top: -15,
+                  right: -30,
+                  child: Image.asset(
+                    'assets/components/star.png',
+                    scale: 0.8,
+                  ),
+                ),
+                Center(
+                  child: Text(
+                    '이미 메코의 질문을 하셨네요.\n메코..! 메코..!',
+                    style: TextStyle(
+                      fontSize: 20,
+                      color: Color(0xFF5A639C),
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+        Positioned(
+          top: MediaQuery.of(context).size.height / 3,
+          right: 20,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Image.asset('assets/character/character6.png'),
+              SizedBox(height: 10),
+              Container(
+                width: MediaQuery.of(context).size.width - 30,
+                padding: EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+                decoration: BoxDecoration(
+                  color: Color(0xFF5E5B88),
+                  borderRadius: BorderRadius.circular(15),
+                ),
+                child: Text(
+                  '오늘의 사건: ${cubit.state.mecoQuestion.contents}',
+                  style: TextStyle(
+                    color: hintTextColor,
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+        Positioned(
+          bottom: 40,
+          right: 20,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: [
+              CustomButton(
+                text: '오늘 대화 보기',
+                right: true,
+                onPressed: () {
+                  final today = DateFormat('yyyy-MM-dd').format(DateTime.now());
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) =>
+                            MecoQuestionSummaryScreen(selectedDay: today),
+                      ));
+                },
+                backgroundcolor: Colors.white,
+              ),
+              SizedBox(height: 10),
+              CustomButton(
+                text: '이전 대화 보기',
+                right: true,
+                onPressed: () async => await _selectDate(context),
+                backgroundcolor: Colors.white,
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
   }
 
   Widget _timeWriteFalse() {
@@ -210,10 +344,12 @@ class _MecoQuestionStartScreenState extends State<MecoQuestionStartScreen> {
                         selectedContent = newValue!;
                       });
                     },
-                    items: contents.map<DropdownMenuItem<String>>((String value) {
+                    items:
+                        contents.map<DropdownMenuItem<String>>((String value) {
                       return DropdownMenuItem<String>(
                         value: value,
-                        child: Text(value, style: TextStyle(color: Colors.white)),
+                        child:
+                            Text(value, style: TextStyle(color: Colors.white)),
                       );
                     }).toList(),
                   ),
@@ -233,7 +369,8 @@ class _MecoQuestionStartScreenState extends State<MecoQuestionStartScreen> {
                 right: true,
                 onPressed: () {
                   Navigator.of(context).push(MaterialPageRoute(
-                    builder: (context) => MecoQuestionChatScreen(event: selectedContent),
+                    builder: (context) =>
+                        MecoQuestionChatScreen(event: selectedContent),
                   ));
                 },
                 backgroundcolor: Colors.white,
@@ -242,7 +379,7 @@ class _MecoQuestionStartScreenState extends State<MecoQuestionStartScreen> {
               CustomButton(
                 text: '이전 대화 보기',
                 right: true,
-                onPressed: () {},
+                onPressed: () async => await _selectDate(context),
                 backgroundcolor: Colors.white,
               ),
             ],
@@ -268,7 +405,11 @@ class _MecoQuestionStartScreenState extends State<MecoQuestionStartScreen> {
             fit: BoxFit.cover,
           ),
         ),
-        child: contents.isEmpty ? _timeWriteFalse() : _timeWriteTrue(),
+        child: hasAnswered
+            ? _alreadyAnswered()
+            : contents.isEmpty
+                ? _timeWriteFalse()
+                : _timeWriteTrue(),
       ),
     );
   }

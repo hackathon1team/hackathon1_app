@@ -22,7 +22,33 @@ class RegisterScreen4 extends StatefulWidget {
 class _RegisterScreen4State extends State<RegisterScreen4> {
   final TextEditingController passwordController = TextEditingController();
   bool obscure = true;
-  double value = 0.75;
+  String? errorText;
+  bool isValid = false;
+
+  @override
+  void initState() {
+    super.initState();
+    passwordController.addListener(_validateInput);
+  }
+
+  @override
+  void dispose() {
+    passwordController.removeListener(_validateInput);
+    passwordController.dispose();
+    super.dispose();
+  }
+
+  void _validateInput() {
+    setState(() {
+      if (passwordController.text.length < 4 || passwordController.text.length > 20) {
+        errorText = '4글자 이상 20글자 이하로 입력해주세요.';
+        isValid = false;
+      } else {
+        errorText = null;
+        isValid = true;
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -42,7 +68,7 @@ class _RegisterScreen4State extends State<RegisterScreen4> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  CustomProgressBar(value: value),
+                  CustomProgressBar(value: 1.0),
                   SizedBox(
                     height: 60,
                   ),
@@ -64,10 +90,16 @@ class _RegisterScreen4State extends State<RegisterScreen4> {
                       color: Colors.white,
                     ),
                     decoration: InputDecoration(
-                      hintText: '비밀번호',
+                      hintText: '비밀번호 4-20글자',
                       hintStyle: TextStyle(
                         color: Color(0xFFE7E7E7),
                         fontSize: 22,
+                        fontWeight: FontWeight.w600,
+                      ),
+                      errorText: errorText,
+                      errorStyle: TextStyle(
+                        color: Color(0xFFC23737).withOpacity(0.9),
+                        fontSize: 11,
                         fontWeight: FontWeight.w600,
                       ),
                       enabledBorder: UnderlineInputBorder(
@@ -116,7 +148,7 @@ class _RegisterScreen4State extends State<RegisterScreen4> {
                 text: '가입하기',
                 right: true,
                 backgroundcolor: Colors.white,
-                onPressed: () async {
+                onPressed: isValid ? () async {
                   final nameJwtCubit = context.read<NameJwtCubit>();
                   final int signupStatus = await Account()
                       .signup(widget.name, widget.id, passwordController.text);
@@ -124,9 +156,7 @@ class _RegisterScreen4State extends State<RegisterScreen4> {
                     final List<String> nameJwt = await Account()
                         .login(widget.id, passwordController.text);
                     nameJwtCubit.Login(nameJwt[0], nameJwt[1]);
-                    setState(() {
-                      value = 1.0;
-                    });
+
                     showGeneralDialog(
                       barrierColor: Colors.black.withOpacity(0),
                       context: context,
@@ -200,7 +230,7 @@ class _RegisterScreen4State extends State<RegisterScreen4> {
                       },
                     );
                   }
-                },
+                } : null,
               ),
             ),
           ],

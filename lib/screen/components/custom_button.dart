@@ -6,7 +6,7 @@ import '../../const/colors.dart';
 class CustomButton extends StatelessWidget {
   final String text;
   final bool right;
-  final VoidCallback onPressed;
+  final VoidCallback? onPressed;
   final Color backgroundcolor;
   const CustomButton({super.key, required this.text, required this.right, required this.onPressed, required this.backgroundcolor,});
 
@@ -20,7 +20,7 @@ class CustomButton extends StatelessWidget {
       ),
       child: Row(
         children: [
-          right ? Container() : Image.asset('assets/react-icon/leftArrow.png'),
+          right ? Container() : Icon(Icons.chevron_left),
           right ? Container() : SizedBox(
             width: 5,
           ),
@@ -34,7 +34,7 @@ class CustomButton extends StatelessWidget {
           right ? SizedBox(
             width: 5,
           ) : Container(),
-          right ? Image.asset(right ? 'assets/react-icon/rightArrow.png' : 'assets/react-icon/leftArrow.png') : Container(),
+          right ? Icon(Icons.chevron_right) : Container(),
         ],
       ),
     );

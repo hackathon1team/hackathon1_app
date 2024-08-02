@@ -36,13 +36,12 @@ class StaticListCubit extends Cubit<StaticListCubitState> {
         List<TimeSpent> timeSpent = (json['timeSpent'] as List?)
                 ?.map((item) => TimeSpent(
                       category: item['category'] as String? ?? '',
-                      hours: int.tryParse(item['hours']?.toString() ?? '') ?? 0,
-                      percentage:
-                          int.tryParse(item['percentage']?.toString() ?? '') ??
-                              0,
+                      hours: item['hours'] as double?? 0,
+                      percentage: item['percentage'] as double ?? 0,
                     ))
                 .toList() ??
             [];
+        print('타임스펜트: $timeSpent');
 
         ComparisonWithLastMonth comparisonWithLastMonth;
 

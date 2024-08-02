@@ -17,6 +17,51 @@ class RegisterScreen3 extends StatefulWidget {
 class _RegisterScreen3State extends State<RegisterScreen3> {
   final TextEditingController idController = TextEditingController();
   bool? duplicated;
+  String? errorText;
+  bool isValid = false;
+
+  @override
+  void initState() {
+    super.initState();
+    idController.addListener(_validateInput);
+  }
+
+  @override
+  void dispose() {
+    idController.removeListener(_validateInput);
+    idController.dispose();
+    super.dispose();
+  }
+
+  void _validateInput() {
+    setState(() {
+      if (idController.text.length < 4 || idController.text.length > 20) {
+        errorText = '4글자 이상 20글자 이하로 입력해주세요.';
+        isValid = false;
+      } else {
+        errorText = null;
+        isValid = true;
+      }
+      // 텍스트가 변경되면 중복 확인 상태를 초기화합니다.
+      duplicated = null;
+    });
+  }
+
+  void _checkDuplicate() async {
+    if (isValid) {
+      final isDuplicated = await Account().checkDuplicated(idController.text);
+      setState(() {
+        duplicated = isDuplicated;
+        if (isDuplicated) {
+          errorText = '사용할 수 없는 아이디입니다.';
+          isValid = false;
+        } else {
+          errorText = '사용 가능한 아이디입니다.';
+          isValid = true;
+        }
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -36,7 +81,7 @@ class _RegisterScreen3State extends State<RegisterScreen3> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  CustomProgressBar(value: 0.5),
+                  CustomProgressBar(value: 0.66),
                   SizedBox(
                     height: 60,
                   ),
@@ -61,21 +106,15 @@ class _RegisterScreen3State extends State<RegisterScreen3> {
                             color: Colors.white,
                           ),
                           decoration: InputDecoration(
-                            errorText: duplicated == null
-                                ? null
-                                : duplicated!
-                                    ? '사용할 수 없는 아이디입니다.'
-                                    : '사용 가능한 아이디입니다.',
-                            errorStyle: duplicated == null
-                                ? null
-                                : TextStyle(
-                                    color: duplicated!
-                                        ? Color(0xFFC23737).withOpacity(0.9)
-                                        : Color(0xFF7FC057).withOpacity(0.9),
-                                    fontSize: 17,
-                                    fontWeight: FontWeight.w600,
-                                  ),
-                            hintText: '아이디 최대 10글자',
+                            errorText: errorText,
+                            errorStyle: TextStyle(
+                              color: errorText == '사용 가능한 아이디입니다.'
+                                  ? Color(0xFF7FC057).withOpacity(0.9)
+                                  : Color(0xFFC23737).withOpacity(0.9),
+                              fontSize: 11,
+                              fontWeight: FontWeight.w600,
+                            ),
+                            hintText: '아이디 4-20글자',
                             hintStyle: TextStyle(
                               color: Color(0xFFE7E7E7),
                               fontSize: 22,
@@ -120,13 +159,7 @@ class _RegisterScreen3State extends State<RegisterScreen3> {
                         width: 5,
                       ),
                       ElevatedButton(
-                        onPressed: () async {
-                          final isDuplicated = await Account().checkDuplicated(idController.text);
-                          print('중복확인: $isDuplicated');
-                          setState(() {
-                            duplicated = isDuplicated;
-                          });
-                        },
+                        onPressed: isValid ? _checkDuplicate : null,
                         style: ElevatedButton.styleFrom(
                           padding: const EdgeInsets.symmetric(horizontal: 10),
                           backgroundColor: Color(0xFF676491),
@@ -165,18 +198,16 @@ class _RegisterScreen3State extends State<RegisterScreen3> {
                 text: '다음 질문',
                 right: true,
                 backgroundcolor: Colors.white,
-                onPressed: () {
-                  if(duplicated == false){
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => RegisterScreen4(
-                            name: widget.name,
-                            id: idController.text,
-                          ),
-                        ));
-                  }
-                },
+                onPressed: isValid && duplicated == false
+                    ? () => Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => RegisterScreen4(
+                        name: widget.name,
+                        id: idController.text,
+                      ),
+                    ))
+                    : null,
               ),
             ),
           ],

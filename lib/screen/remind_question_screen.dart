@@ -26,6 +26,11 @@ class _RemindQuestionScreenState extends State<RemindQuestionScreen> {
   late String answer4;
   late String answer5;
 
+  @override
+  void initState() {
+    super.initState();
+    loadQuestionAnswer();
+  }
 
   void loadQuestionAnswer() async {
     final nameJwt = BlocProvider.of<NameJwtCubit>(context);
@@ -112,10 +117,7 @@ class _RemindQuestionScreenState extends State<RemindQuestionScreen> {
   Widget build(BuildContext context) {
     return BlocBuilder<MetaQuestionCubit, MetaQuestionCubitState>(
       builder: (context, state) {
-        print('현재 상재: $state');
-        if (state is InitMetaQuestionCubitState) {
-          loadQuestionAnswer();
-        } else if (state is LoadingMetaQuestionCubitState) {
+         if (state is LoadingMetaQuestionCubitState) {
           return Center(
             child: CircularProgressIndicator(),
           );

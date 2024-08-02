@@ -17,8 +17,8 @@ class StaticMonth {
 
 class TimeSpent extends Equatable{
   final String category;
-  final int hours;
-  final int percentage;
+  final double hours;
+  final double percentage;
 
   TimeSpent.init() : this(category: '', hours: 0, percentage: 0);
 

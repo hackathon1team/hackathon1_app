@@ -78,6 +78,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     height: 15,
                   ),
                   TextField(
+                    obscureText: true,
                     controller: passwordController,
                     style: TextStyle(
                       fontSize: 15,
@@ -103,8 +104,11 @@ class _LoginScreenState extends State<LoginScreen> {
                       final nameJwtCubit = context.read<NameJwtCubit>();
                       final List<String> nameJwt = await Account()
                           .login(idController.text, passwordController.text);
+                      print('nameJwt: $nameJwt');
                       if (nameJwt[0] == 'login failed') {
-                        //나중에 구현
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(content: Text('아이디 혹은 비밀번호가 틀렸습니다.')),
+                        );
                       } else {
                         nameJwtCubit.Login(nameJwt[0], nameJwt[1]);
                         Navigator.pushReplacement(

@@ -13,6 +13,40 @@ class RegisterScreen2 extends StatefulWidget {
 
 class _RegisterScreen2State extends State<RegisterScreen2> {
   final TextEditingController nameController = TextEditingController();
+  String? errorText;
+  bool hasStartedTyping = false;
+  bool isValid = false;
+
+  @override
+  void initState() {
+    super.initState();
+    nameController.addListener(_validateInput);
+  }
+
+  @override
+  void dispose() {
+    nameController.removeListener(_validateInput);
+    nameController.dispose();
+    super.dispose();
+  }
+
+  void _validateInput() {
+    if (hasStartedTyping) {
+      setState(() {
+        if (nameController.text.isEmpty) {
+          errorText = null;
+          isValid = false;
+        } else if (nameController.text.length < 2 || nameController.text.length > 12) {
+          errorText = '최소 2글자 최대 12글자 입력해주세요.';
+          isValid = false;
+        } else {
+          errorText = null;
+          isValid = true;
+        }
+      });
+    }
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -32,7 +66,7 @@ class _RegisterScreen2State extends State<RegisterScreen2> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  CustomProgressBar(value: 0.25),
+                  CustomProgressBar(value: 0.33),
                   SizedBox(
                     height: 60,
                   ),
@@ -53,7 +87,21 @@ class _RegisterScreen2State extends State<RegisterScreen2> {
                       fontWeight: FontWeight.w600,
                       color: Colors.white,
                     ),
+                    onChanged: (value) {
+                      if (!hasStartedTyping) {
+                        setState(() {
+                          hasStartedTyping = true;
+                        });
+                      }
+                      _validateInput();
+                    },
                     decoration: InputDecoration(
+                      errorText: errorText,
+                      errorStyle: TextStyle(
+                        color: Color(0xFFC23737).withOpacity(0.9),
+                        fontSize: 12,
+                        fontWeight: FontWeight.w600,
+                      ),
                       hintText: '이름을 작성해주세요',
                       hintStyle: TextStyle(
                         color: Color(0xFFE7E7E7),
@@ -82,7 +130,8 @@ class _RegisterScreen2State extends State<RegisterScreen2> {
               left: 40,
               child: CustomButton(
                 text: '이전 질문',
-                right: false,backgroundcolor: Colors.white,
+                right: false,
+                backgroundcolor: Colors.white,
                 onPressed: () => Navigator.of(context).pop(),
               ),
             ),
@@ -91,12 +140,15 @@ class _RegisterScreen2State extends State<RegisterScreen2> {
               right: 40,
               child: CustomButton(
                 text: '다음 질문',
-                right: true,backgroundcolor: Colors.white,
-                onPressed: () => Navigator.push(
+                right: true,
+                backgroundcolor: Colors.white,
+                onPressed: isValid ? () =>  Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => RegisterScreen3(name: nameController.text,),
-                    )),
+                      builder: (context) => RegisterScreen3(
+                        name: nameController.text,
+                      ),
+                    )) : null,
               ),
             ),
           ],

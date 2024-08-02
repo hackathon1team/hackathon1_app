@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-
 import '../const/colors.dart';
 import 'components/custom_button.dart';
 import 'register_screen2.dart';
@@ -61,11 +60,28 @@ class RegisterScreen1 extends StatelessWidget {
             Positioned(
               bottom: 40,
               right: 40,
-              child: CustomButton(text: '회원가입 하러가기', right: true,backgroundcolor: Colors.white, onPressed: () => Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => RegisterScreen2(),
-                  )),),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: [
+                  CustomButton(
+                    text: '로그인하기',
+                    right: true,
+                    backgroundcolor: Colors.white,
+                    onPressed: () => Navigator.of(context).pop(),
+                  ),
+                  SizedBox(height: 10,),
+                  CustomButton(
+                    text: '회원가입 하러가기',
+                    right: true,
+                    backgroundcolor: Colors.white,
+                    onPressed: () => Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => RegisterScreen2(),
+                        )),
+                  ),
+                ],
+              ),
             ),
           ],
         ),

@@ -4,6 +4,7 @@ import 'package:memory_app/const/colors.dart';
 import 'package:memory_app/cubit/meta_question_cubit.dart';
 import 'package:memory_app/cubit/name_jwt_cubit.dart';
 import 'package:memory_app/screen/components/custom_progress_bar.dart';
+import 'package:memory_app/screen/components/navigation_service.dart';
 
 import 'components/custom_button.dart';
 import 'home_screen.dart';
@@ -146,24 +147,26 @@ class _RemindQuestion5ScreenState extends State<RemindQuestion5Screen> {
                 right: true,
                 backgroundcolor: Colors.white,
                 onPressed: () async {
-                  final nameJwt = BlocProvider.of<NameJwtCubit>(context);
-                  await context.read<MetaQuestionCubit>().answerQuestion(
-                    [
-                      widget.answer1,
-                      widget.answer2,
-                      widget.answer3,
-                      widget.answer4,
-                      questionController_5.text
-                    ],
-                    nameJwt.state.nameJwt.jwt!,
-                  );
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => HomeScreen(
-                          currentIndex: 0,
-                        ),
-                      ));
+                  try {
+                    final nameJwt = BlocProvider.of<NameJwtCubit>(context);
+                    await context.read<MetaQuestionCubit>().answerQuestion(
+                      [
+                        widget.answer1,
+                        widget.answer2,
+                        widget.answer3,
+                        widget.answer4,
+                        questionController_5.text
+                      ],
+                      nameJwt.state.nameJwt.jwt!,
+                    );
+
+                    NavigationService.navigateToHome();
+                  } catch (e) {
+                    print('Error submitting answers: $e');
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(content: Text('오류가 발생했습니다. 다시 시도해 주세요.')),
+                    );
+                  }
                 },
               ),
             ),

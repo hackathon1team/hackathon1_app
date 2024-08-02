@@ -189,7 +189,9 @@ class _TimeLedgerScreenState extends State<TimeLedgerScreen> {
                           onPressed: () {
                             setState(() {
                               _selectedDate = DateTime.now();
+                              _selectedDateOnly = DateFormat('yyyy-MM-dd').format(_selectedDate);
                             });
+                            _loadTimeLedgerList();
                           },
                           child: Text(
                             '오늘로 돌아가기',
@@ -558,579 +560,580 @@ class _TimeLedgerScreenState extends State<TimeLedgerScreen> {
                         builder: (context) {
                           return StatefulBuilder(builder: (BuildContext context,
                               StateSetter setModalState) {
-                            return Wrap(
-                              children: [
-                                Container(
-                                  padding: const EdgeInsets.all(32.0),
-                                  height: MediaQuery.of(context).size.height *
-                                      0.45, // 원하는 높이로 설정 (예: 화면 높이의 60%)
-                                  child: Column(
-                                    children: [
-                                      Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          Text(
-                                            '${_selectedDate.month}월 ${_selectedDate.day}일 일정 추가',
-                                            style: boldStyle,
-                                          ),
-                                          IconButton(
-                                            onPressed: () {
-                                              Navigator.of(context).pop();
-                                            },
-                                            icon: Icon(Icons.close),
-                                          ),
-                                        ],
-                                      ),
-                                      SizedBox(
-                                        height: 20,
-                                      ),
-                                      Row(
-                                        children: [
-                                          Text(
-                                            '감정: ',
-                                            style: boldStyle.copyWith(
-                                                fontSize: 18),
-                                          ),
-                                          GestureDetector(
-                                            onTap: () {
-                                              showModalBottomSheet(
-                                                backgroundColor: Colors.white,
-                                                context: context,
-                                                isScrollControlled: true,
-                                                builder: (context) {
-                                                  return Wrap(
-                                                    children: [
-                                                      DefaultTabController(
-                                                        length: 3, // 탭의 개수
-                                                        child: Container(
+                            return SingleChildScrollView(
+                              child: Wrap(
+                                children: [
+                                  Container(
+                                    padding: const EdgeInsets.all(32.0),
+                                    height: MediaQuery.of(context).size.height * 0.45 + MediaQuery.of(context).viewInsets.bottom,
+                                    child: Column(
+                                      children: [
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Text(
+                                              '${_selectedDate.month}월 ${_selectedDate.day}일 일정 추가',
+                                              style: boldStyle,
+                                            ),
+                                            IconButton(
+                                              onPressed: () {
+                                                Navigator.of(context).pop();
+                                              },
+                                              icon: Icon(Icons.close),
+                                            ),
+                                          ],
+                                        ),
+                                        SizedBox(
+                                          height: 20,
+                                        ),
+                                        Row(
+                                          children: [
+                                            Text(
+                                              '감정: ',
+                                              style: boldStyle.copyWith(
+                                                  fontSize: 18),
+                                            ),
+                                            GestureDetector(
+                                              onTap: () {
+                                                showModalBottomSheet(
+                                                  backgroundColor: Colors.white,
+                                                  context: context,
+                                                  isScrollControlled: true,
+                                                  builder: (context) {
+                                                    return Wrap(
+                                                      children: [
+                                                        DefaultTabController(
+                                                          length: 3, // 탭의 개수
+                                                          child: Container(
+                                                            height: MediaQuery.of(
+                                                                        context)
+                                                                    .size
+                                                                    .height *
+                                                                0.3,
+                                                            child: Column(
+                                                              children: [
+                                                                Row(
+                                                                  mainAxisAlignment:
+                                                                      MainAxisAlignment
+                                                                          .spaceBetween,
+                                                                  children: [
+                                                                    Container(
+                                                                      alignment:
+                                                                          Alignment
+                                                                              .centerLeft,
+                                                                      child:
+                                                                          TabBar(
+                                                                        tabAlignment:
+                                                                            TabAlignment
+                                                                                .start,
+                                                                        isScrollable:
+                                                                            true,
+                                                                        indicator:
+                                                                            BoxDecoration(
+                                                                          color: Color(0xFF9B86BD)
+                                                                              .withOpacity(0.41),
+                                                                          borderRadius:
+                                                                              BorderRadius.circular(30),
+                                                                        ),
+                                                                        indicatorSize:
+                                                                            TabBarIndicatorSize
+                                                                                .tab,
+                                                                        indicatorPadding: EdgeInsets.only(
+                                                                            top:
+                                                                                3,
+                                                                            bottom:
+                                                                                0),
+                                                                        dividerColor:
+                                                                            Colors
+                                                                                .transparent,
+                                                                        labelColor:
+                                                                            Color(
+                                                                                0xFF5A639C),
+                                                                        labelStyle:
+                                                                            boldStyle.copyWith(
+                                                                                fontSize: 16),
+                                                                        unselectedLabelColor:
+                                                                            Color(
+                                                                                0xFF5A639C),
+                                                                        tabs: [
+                                                                          Tab(
+                                                                              text:
+                                                                                  '긍정적'),
+                                                                          Tab(
+                                                                              text:
+                                                                                  '중립'),
+                                                                          Tab(
+                                                                              text:
+                                                                                  '부정적'),
+                                                                        ],
+                                                                      ),
+                                                                    ),
+                                                                    IconButton(
+                                                                      icon: Icon(
+                                                                          Icons
+                                                                              .close,
+                                                                          color: Colors
+                                                                              .grey),
+                                                                      onPressed:
+                                                                          () {
+                                                                        Navigator.pop(
+                                                                            context);
+                                                                      },
+                                                                    ),
+                                                                  ],
+                                                                ),
+                                                                Expanded(
+                                                                  child:
+                                                                      TabBarView(
+                                                                    children: [
+                                                                      // 긍정적 탭의 내용
+                                                                      GridView
+                                                                          .builder(
+                                                                        shrinkWrap:
+                                                                            true,
+                                                                        padding:
+                                                                            EdgeInsets.all(
+                                                                                8),
+                                                                        gridDelegate:
+                                                                            SliverGridDelegateWithFixedCrossAxisCount(
+                                                                          crossAxisCount:
+                                                                              3,
+                                                                          childAspectRatio:
+                                                                              2.5,
+                                                                          crossAxisSpacing:
+                                                                              8,
+                                                                          mainAxisSpacing:
+                                                                              8,
+                                                                        ),
+                                                                        itemCount:
+                                                                            positiveEmoji
+                                                                                .length,
+                                                                        itemBuilder:
+                                                                            (context,
+                                                                                index) {
+                                                                          return GestureDetector(
+                                                                            onTap:
+                                                                                () {
+                                                                              setModalState(() {
+                                                                                selectedEmotion = positiveEmoji.keys.elementAt(index);
+                                                                                selectedEmotionCategory = '긍정';
+                                                                              });
+                                                                              Navigator.of(context).pop();
+                                                                            },
+                                                                            child: _buildEmojiChip(positiveEmoji
+                                                                                .keys
+                                                                                .elementAt(index)),
+                                                                          );
+                                                                        },
+                                                                      ),
+                                                                      // 중립 탭의 내용
+                                                                      GridView
+                                                                          .builder(
+                                                                        shrinkWrap:
+                                                                            true,
+                                                                        padding:
+                                                                            EdgeInsets.all(
+                                                                                8),
+                                                                        gridDelegate:
+                                                                            SliverGridDelegateWithFixedCrossAxisCount(
+                                                                          crossAxisCount:
+                                                                              3,
+                                                                          childAspectRatio:
+                                                                              2.5,
+                                                                          crossAxisSpacing:
+                                                                              8,
+                                                                          mainAxisSpacing:
+                                                                              8,
+                                                                        ),
+                                                                        itemCount:
+                                                                            neutralEmoji
+                                                                                .length,
+                                                                        itemBuilder:
+                                                                            (context,
+                                                                                index) {
+                                                                          return GestureDetector(
+                                                                            onTap:
+                                                                                () {
+                                                                              setModalState(() {
+                                                                                selectedEmotion = neutralEmoji.keys.elementAt(index);
+                                                                                selectedEmotionCategory = '중립';
+                                                                              });
+                                                                              Navigator.of(context).pop();
+                                                                            },
+                                                                            child: _buildEmojiChip(neutralEmoji
+                                                                                .keys
+                                                                                .elementAt(index)),
+                                                                          );
+                                                                        },
+                                                                      ),
+                                                                      // 부정적 탭의 내용
+                                                                      GridView
+                                                                          .builder(
+                                                                        shrinkWrap:
+                                                                            true,
+                                                                        padding:
+                                                                            EdgeInsets.all(
+                                                                                8),
+                                                                        gridDelegate:
+                                                                            SliverGridDelegateWithFixedCrossAxisCount(
+                                                                          crossAxisCount:
+                                                                              3,
+                                                                          childAspectRatio:
+                                                                              2.5,
+                                                                          crossAxisSpacing:
+                                                                              8,
+                                                                          mainAxisSpacing:
+                                                                              8,
+                                                                        ),
+                                                                        itemCount:
+                                                                            negativeEmoji
+                                                                                .length,
+                                                                        itemBuilder:
+                                                                            (context,
+                                                                                index) {
+                                                                          return GestureDetector(
+                                                                            onTap:
+                                                                                () {
+                                                                              setModalState(() {
+                                                                                selectedEmotion = negativeEmoji.keys.elementAt(index);
+                                                                                selectedEmotionCategory = '부정';
+                                                                              });
+                                                                              Navigator.of(context).pop();
+                                                                            },
+                                                                            child: _buildEmojiChip(negativeEmoji
+                                                                                .keys
+                                                                                .elementAt(index)),
+                                                                          );
+                                                                        },
+                                                                      ),
+                                                                    ],
+                                                                  ),
+                                                                ),
+                                                              ],
+                                                            ),
+                                                          ),
+                                                        ),
+                                                      ],
+                                                    );
+                                                  },
+                                                );
+                                              },
+                                              child: Text(
+                                                selectedEmotion == null
+                                                    ? '감정을 선택해주세요'
+                                                    : '${Emoji[selectedEmotion]} $selectedEmotion',
+                                                style: normalStyle,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                        SizedBox(
+                                          height: 15,
+                                        ),
+                                        Row(
+                                          children: [
+                                            Text(
+                                              '분류: ',
+                                              style: boldStyle.copyWith(
+                                                  fontSize: 18),
+                                            ),
+                                            GestureDetector(
+                                              onTap: () {
+                                                showModalBottomSheet(
+                                                  backgroundColor: Colors.white,
+                                                  context: context,
+                                                  isScrollControlled: true,
+                                                  builder: (context) {
+                                                    return Wrap(
+                                                      children: [
+                                                        Container(
                                                           height: MediaQuery.of(
                                                                       context)
                                                                   .size
                                                                   .height *
                                                               0.3,
                                                           child: Column(
+                                                            mainAxisAlignment:
+                                                                MainAxisAlignment
+                                                                    .center,
+                                                            crossAxisAlignment:
+                                                                CrossAxisAlignment
+                                                                    .stretch,
                                                             children: [
                                                               Row(
                                                                 mainAxisAlignment:
                                                                     MainAxisAlignment
-                                                                        .spaceBetween,
+                                                                        .end,
                                                                 children: [
-                                                                  Container(
-                                                                    alignment:
-                                                                        Alignment
-                                                                            .centerLeft,
-                                                                    child:
-                                                                        TabBar(
-                                                                      tabAlignment:
-                                                                          TabAlignment
-                                                                              .start,
-                                                                      isScrollable:
-                                                                          true,
-                                                                      indicator:
-                                                                          BoxDecoration(
-                                                                        color: Color(0xFF9B86BD)
-                                                                            .withOpacity(0.41),
-                                                                        borderRadius:
-                                                                            BorderRadius.circular(30),
-                                                                      ),
-                                                                      indicatorSize:
-                                                                          TabBarIndicatorSize
-                                                                              .tab,
-                                                                      indicatorPadding: EdgeInsets.only(
-                                                                          top:
-                                                                              3,
-                                                                          bottom:
-                                                                              0),
-                                                                      dividerColor:
-                                                                          Colors
-                                                                              .transparent,
-                                                                      labelColor:
-                                                                          Color(
-                                                                              0xFF5A639C),
-                                                                      labelStyle:
-                                                                          boldStyle.copyWith(
-                                                                              fontSize: 16),
-                                                                      unselectedLabelColor:
-                                                                          Color(
-                                                                              0xFF5A639C),
-                                                                      tabs: [
-                                                                        Tab(
-                                                                            text:
-                                                                                '긍정적'),
-                                                                        Tab(
-                                                                            text:
-                                                                                '중립'),
-                                                                        Tab(
-                                                                            text:
-                                                                                '부정적'),
-                                                                      ],
-                                                                    ),
-                                                                  ),
                                                                   IconButton(
-                                                                    icon: Icon(
-                                                                        Icons
-                                                                            .close,
-                                                                        color: Colors
-                                                                            .grey),
-                                                                    onPressed:
-                                                                        () {
-                                                                      Navigator.pop(
-                                                                          context);
-                                                                    },
-                                                                  ),
+                                                                      onPressed:
+                                                                          () {
+                                                                        Navigator.of(
+                                                                                context)
+                                                                            .pop();
+                                                                      },
+                                                                      icon: Icon(Icons
+                                                                          .close))
                                                                 ],
                                                               ),
                                                               Expanded(
-                                                                child:
-                                                                    TabBarView(
-                                                                  children: [
-                                                                    // 긍정적 탭의 내용
-                                                                    GridView
-                                                                        .builder(
-                                                                      shrinkWrap:
-                                                                          true,
-                                                                      padding:
-                                                                          EdgeInsets.all(
-                                                                              8),
-                                                                      gridDelegate:
-                                                                          SliverGridDelegateWithFixedCrossAxisCount(
-                                                                        crossAxisCount:
-                                                                            3,
-                                                                        childAspectRatio:
-                                                                            2.5,
-                                                                        crossAxisSpacing:
-                                                                            8,
-                                                                        mainAxisSpacing:
-                                                                            8,
-                                                                      ),
-                                                                      itemCount:
-                                                                          positiveEmoji
-                                                                              .length,
-                                                                      itemBuilder:
-                                                                          (context,
-                                                                              index) {
-                                                                        return GestureDetector(
-                                                                          onTap:
-                                                                              () {
-                                                                            setModalState(() {
-                                                                              selectedEmotion = positiveEmoji.keys.elementAt(index);
-                                                                              selectedEmotionCategory = '긍정적';
-                                                                            });
-                                                                            Navigator.of(context).pop();
-                                                                          },
-                                                                          child: _buildEmojiChip(positiveEmoji
-                                                                              .keys
-                                                                              .elementAt(index)),
-                                                                        );
+                                                                child: ListView
+                                                                    .separated(
+                                                                  itemBuilder:
+                                                                      (context,
+                                                                          index) {
+                                                                    return GestureDetector(
+                                                                      onTap: () {
+                                                                        setModalState(
+                                                                            () {
+                                                                          selectedCategory =
+                                                                              category[index];
+                                                                        });
+                                                                        Navigator.of(
+                                                                                context)
+                                                                            .pop();
                                                                       },
-                                                                    ),
-                                                                    // 중립 탭의 내용
-                                                                    GridView
-                                                                        .builder(
-                                                                      shrinkWrap:
-                                                                          true,
-                                                                      padding:
-                                                                          EdgeInsets.all(
-                                                                              8),
-                                                                      gridDelegate:
-                                                                          SliverGridDelegateWithFixedCrossAxisCount(
-                                                                        crossAxisCount:
-                                                                            3,
-                                                                        childAspectRatio:
-                                                                            2.5,
-                                                                        crossAxisSpacing:
-                                                                            8,
-                                                                        mainAxisSpacing:
-                                                                            8,
+                                                                      child: Text(
+                                                                        category[
+                                                                            index],
+                                                                        style:
+                                                                            TextStyle(
+                                                                          color:
+                                                                              buttonTextColor,
+                                                                          fontSize:
+                                                                              16,
+                                                                          fontWeight:
+                                                                              FontWeight.w600,
+                                                                        ),
+                                                                        textAlign:
+                                                                            TextAlign
+                                                                                .center,
                                                                       ),
-                                                                      itemCount:
-                                                                          neutralEmoji
-                                                                              .length,
-                                                                      itemBuilder:
-                                                                          (context,
-                                                                              index) {
-                                                                        return GestureDetector(
-                                                                          onTap:
-                                                                              () {
-                                                                            setModalState(() {
-                                                                              selectedEmotion = neutralEmoji.keys.elementAt(index);
-                                                                              selectedEmotionCategory = '중립적';
-                                                                            });
-                                                                            Navigator.of(context).pop();
-                                                                          },
-                                                                          child: _buildEmojiChip(neutralEmoji
-                                                                              .keys
-                                                                              .elementAt(index)),
-                                                                        );
-                                                                      },
-                                                                    ),
-                                                                    // 부정적 탭의 내용
-                                                                    GridView
-                                                                        .builder(
-                                                                      shrinkWrap:
-                                                                          true,
-                                                                      padding:
-                                                                          EdgeInsets.all(
-                                                                              8),
-                                                                      gridDelegate:
-                                                                          SliverGridDelegateWithFixedCrossAxisCount(
-                                                                        crossAxisCount:
-                                                                            3,
-                                                                        childAspectRatio:
-                                                                            2.5,
-                                                                        crossAxisSpacing:
-                                                                            8,
-                                                                        mainAxisSpacing:
-                                                                            8,
-                                                                      ),
-                                                                      itemCount:
-                                                                          negativeEmoji
-                                                                              .length,
-                                                                      itemBuilder:
-                                                                          (context,
-                                                                              index) {
-                                                                        return GestureDetector(
-                                                                          onTap:
-                                                                              () {
-                                                                            setModalState(() {
-                                                                              selectedEmotion = negativeEmoji.keys.elementAt(index);
-                                                                              selectedEmotionCategory = '부정적';
-                                                                            });
-                                                                            Navigator.of(context).pop();
-                                                                          },
-                                                                          child: _buildEmojiChip(negativeEmoji
-                                                                              .keys
-                                                                              .elementAt(index)),
-                                                                        );
-                                                                      },
-                                                                    ),
-                                                                  ],
+                                                                    );
+                                                                  },
+                                                                  separatorBuilder:
+                                                                      (context,
+                                                                              index) =>
+                                                                          SizedBox(
+                                                                    height: 15,
+                                                                  ),
+                                                                  itemCount:
+                                                                      category
+                                                                          .length,
                                                                 ),
                                                               ),
                                                             ],
                                                           ),
                                                         ),
-                                                      ),
-                                                    ],
-                                                  );
-                                                },
-                                              );
-                                            },
-                                            child: Text(
-                                              selectedEmotion == null
-                                                  ? '감정을 선택해주세요'
-                                                  : '${Emoji[selectedEmotion]} $selectedEmotion',
-                                              style: normalStyle,
+                                                      ],
+                                                    );
+                                                  },
+                                                );
+                                              },
+                                              child: Text(
+                                                selectedCategory ?? '분류를 선택해주세요',
+                                                style: normalStyle,
+                                              ),
                                             ),
-                                          ),
-                                        ],
-                                      ),
-                                      SizedBox(
-                                        height: 15,
-                                      ),
-                                      Row(
-                                        children: [
-                                          Text(
-                                            '분류: ',
-                                            style: boldStyle.copyWith(
-                                                fontSize: 18),
-                                          ),
-                                          GestureDetector(
-                                            onTap: () {
-                                              showModalBottomSheet(
-                                                backgroundColor: Colors.white,
-                                                context: context,
-                                                isScrollControlled: true,
-                                                builder: (context) {
-                                                  return Wrap(
-                                                    children: [
-                                                      Container(
-                                                        height: MediaQuery.of(
-                                                                    context)
-                                                                .size
-                                                                .height *
-                                                            0.3,
-                                                        child: Column(
-                                                          mainAxisAlignment:
-                                                              MainAxisAlignment
-                                                                  .center,
-                                                          crossAxisAlignment:
-                                                              CrossAxisAlignment
-                                                                  .stretch,
-                                                          children: [
-                                                            Row(
-                                                              mainAxisAlignment:
-                                                                  MainAxisAlignment
-                                                                      .end,
-                                                              children: [
-                                                                IconButton(
-                                                                    onPressed:
-                                                                        () {
-                                                                      Navigator.of(
-                                                                              context)
-                                                                          .pop();
-                                                                    },
-                                                                    icon: Icon(Icons
-                                                                        .close))
-                                                              ],
+                                          ],
+                                        ),
+                                        SizedBox(
+                                          height: 15,
+                                        ),
+                                        Row(
+                                          children: [
+                                            Text(
+                                              '내용: ',
+                                              style: boldStyle.copyWith(
+                                                  fontSize: 18),
+                                            ),
+                                            Expanded(
+                                                child: TextField(
+                                              controller: contentsController,
+                                              decoration: InputDecoration(
+                                                hintText: '내용을 입력해주세요',
+                                                hintStyle: normalStyle,
+                                                border: InputBorder.none,
+                                                focusedBorder: InputBorder.none,
+                                                enabledBorder: InputBorder.none,
+                                                errorBorder: InputBorder.none,
+                                                disabledBorder: InputBorder.none,
+                                              ),
+                                            )),
+                                          ],
+                                        ),
+                                        SizedBox(
+                                          height: 15,
+                                        ),
+                                        Row(
+                                          children: [
+                                            Text(
+                                              '시간: ',
+                                              style: boldStyle.copyWith(
+                                                  fontSize: 18),
+                                            ),
+                                            GestureDetector(
+                                              onTap: () {
+                                                showModalBottomSheet(
+                                                  context: context,
+                                                  enableDrag: false,
+                                                  builder: (context) {
+                                                    return Container(
+                                                      height:
+                                                          MediaQuery.of(context)
+                                                                  .size
+                                                                  .height *
+                                                              0.3,
+                                                      child: Column(
+                                                        crossAxisAlignment:
+                                                            CrossAxisAlignment
+                                                                .end,
+                                                        children: [
+                                                          IconButton(
+                                                              onPressed: () {
+                                                                Navigator.of(
+                                                                        context)
+                                                                    .pop();
+                                                              },
+                                                              icon: Icon(
+                                                                  Icons.close)),
+                                                          Expanded(
+                                                            child:
+                                                                CupertinoPicker(
+                                                              itemExtent: 40,
+                                                              onSelectedItemChanged:
+                                                                  (int index) {
+                                                                setModalState(() {
+                                                                  selectedHour =
+                                                                      index + 1;
+                                                                });
+                                                              },
+                                                              children: List<
+                                                                      Widget>.generate(
+                                                                  24,
+                                                                  (int index) {
+                                                                return Center(
+                                                                  child: Text(
+                                                                    '${index + 1}시간',
+                                                                    style: boldStyle
+                                                                        .copyWith(
+                                                                            fontSize:
+                                                                                20),
+                                                                  ),
+                                                                );
+                                                              }),
                                                             ),
-                                                            Expanded(
-                                                              child: ListView
-                                                                  .separated(
-                                                                itemBuilder:
-                                                                    (context,
-                                                                        index) {
-                                                                  return GestureDetector(
-                                                                    onTap: () {
-                                                                      setModalState(
-                                                                          () {
-                                                                        selectedCategory =
-                                                                            category[index];
-                                                                      });
-                                                                      Navigator.of(
-                                                                              context)
-                                                                          .pop();
-                                                                    },
-                                                                    child: Text(
-                                                                      category[
-                                                                          index],
-                                                                      style:
-                                                                          TextStyle(
-                                                                        color:
-                                                                            buttonTextColor,
-                                                                        fontSize:
-                                                                            16,
-                                                                        fontWeight:
-                                                                            FontWeight.w600,
-                                                                      ),
-                                                                      textAlign:
-                                                                          TextAlign
-                                                                              .center,
-                                                                    ),
-                                                                  );
-                                                                },
-                                                                separatorBuilder:
-                                                                    (context,
-                                                                            index) =>
-                                                                        SizedBox(
-                                                                  height: 15,
-                                                                ),
-                                                                itemCount:
-                                                                    category
-                                                                        .length,
-                                                              ),
-                                                            ),
-                                                          ],
-                                                        ),
-                                                      ),
-                                                    ],
-                                                  );
-                                                },
-                                              );
-                                            },
-                                            child: Text(
-                                              selectedCategory ?? '분류를 선택해주세요',
-                                              style: normalStyle,
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                      SizedBox(
-                                        height: 15,
-                                      ),
-                                      Row(
-                                        children: [
-                                          Text(
-                                            '내용: ',
-                                            style: boldStyle.copyWith(
-                                                fontSize: 18),
-                                          ),
-                                          Expanded(
-                                              child: TextField(
-                                            controller: contentsController,
-                                            decoration: InputDecoration(
-                                              hintText: '내용을 입력해주세요',
-                                              hintStyle: normalStyle,
-                                              border: InputBorder.none,
-                                              focusedBorder: InputBorder.none,
-                                              enabledBorder: InputBorder.none,
-                                              errorBorder: InputBorder.none,
-                                              disabledBorder: InputBorder.none,
-                                            ),
-                                          )),
-                                        ],
-                                      ),
-                                      SizedBox(
-                                        height: 15,
-                                      ),
-                                      Row(
-                                        children: [
-                                          Text(
-                                            '시간: ',
-                                            style: boldStyle.copyWith(
-                                                fontSize: 18),
-                                          ),
-                                          GestureDetector(
-                                            onTap: () {
-                                              showModalBottomSheet(
-                                                context: context,
-                                                enableDrag: false,
-                                                builder: (context) {
-                                                  return Container(
-                                                    height:
-                                                        MediaQuery.of(context)
-                                                                .size
-                                                                .height *
-                                                            0.3,
-                                                    child: Column(
-                                                      crossAxisAlignment:
-                                                          CrossAxisAlignment
-                                                              .end,
-                                                      children: [
-                                                        IconButton(
+                                                          ),
+                                                          ElevatedButton(
                                                             onPressed: () {
                                                               Navigator.of(
                                                                       context)
                                                                   .pop();
                                                             },
-                                                            icon: Icon(
-                                                                Icons.close)),
-                                                        Expanded(
-                                                          child:
-                                                              CupertinoPicker(
-                                                            itemExtent: 40,
-                                                            onSelectedItemChanged:
-                                                                (int index) {
-                                                              setModalState(() {
-                                                                selectedHour =
-                                                                    index + 1;
-                                                              });
-                                                            },
-                                                            children: List<
-                                                                    Widget>.generate(
-                                                                24,
-                                                                (int index) {
-                                                              return Center(
-                                                                child: Text(
-                                                                  '${index + 1}시간',
-                                                                  style: boldStyle
-                                                                      .copyWith(
-                                                                          fontSize:
-                                                                              20),
-                                                                ),
-                                                              );
-                                                            }),
-                                                          ),
-                                                        ),
-                                                        ElevatedButton(
-                                                          onPressed: () {
-                                                            Navigator.of(
-                                                                    context)
-                                                                .pop();
-                                                          },
-                                                          child: Text(
-                                                            '추가',
-                                                            style: boldStyle
-                                                                .copyWith(
-                                                              fontSize: 17,
+                                                            child: Text(
+                                                              '추가',
+                                                              style: boldStyle
+                                                                  .copyWith(
+                                                                fontSize: 17,
+                                                              ),
+                                                            ),
+                                                            style: ElevatedButton
+                                                                .styleFrom(
+                                                              padding: EdgeInsets
+                                                                  .symmetric(
+                                                                      vertical: 4,
+                                                                      horizontal:
+                                                                          24),
+                                                              backgroundColor:
+                                                                  Color(
+                                                                      0xFFDDD9D9),
+                                                              shape:
+                                                                  RoundedRectangleBorder(
+                                                                borderRadius:
+                                                                    BorderRadius
+                                                                        .circular(
+                                                                            10),
+                                                              ),
+                                                              tapTargetSize:
+                                                                  MaterialTapTargetSize
+                                                                      .shrinkWrap,
+                                                              // 버튼 크기 줄이기
+                                                              minimumSize: Size(0,
+                                                                  36), // 최소 높이 설정
                                                             ),
                                                           ),
-                                                          style: ElevatedButton
-                                                              .styleFrom(
-                                                            padding: EdgeInsets
-                                                                .symmetric(
-                                                                    vertical: 4,
-                                                                    horizontal:
-                                                                        24),
-                                                            backgroundColor:
-                                                                Color(
-                                                                    0xFFDDD9D9),
-                                                            shape:
-                                                                RoundedRectangleBorder(
-                                                              borderRadius:
-                                                                  BorderRadius
-                                                                      .circular(
-                                                                          10),
-                                                            ),
-                                                            tapTargetSize:
-                                                                MaterialTapTargetSize
-                                                                    .shrinkWrap,
-                                                            // 버튼 크기 줄이기
-                                                            minimumSize: Size(0,
-                                                                36), // 최소 높이 설정
-                                                          ),
-                                                        ),
-                                                      ],
-                                                    ),
-                                                  );
-                                                },
-                                              );
-                                            },
-                                            child: Text(
-                                              selectedHour == null
-                                                  ? '소요시간을 작성해주세요(시간당)'
-                                                  : '${selectedHour.toString()}시간',
-                                              style: normalStyle,
+                                                        ],
+                                                      ),
+                                                    );
+                                                  },
+                                                );
+                                              },
+                                              child: Text(
+                                                selectedHour == null
+                                                    ? '소요시간을 작성해주세요(시간당)'
+                                                    : '${selectedHour.toString()}시간',
+                                                style: normalStyle,
+                                              ),
                                             ),
-                                          ),
-                                        ],
-                                      ),
-                                      SizedBox(
-                                        height: 20,
-                                      ),
-                                      Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.end,
-                                        children: [
-                                          ElevatedButton(
-                                            onPressed: () async {
-                                              _addTimeLedger(
-                                                  selectedEmotion!,
-                                                  selectedEmotionCategory!,
-                                                  selectedCategory!,
-                                                  contentsController.text,
-                                                  selectedHour!.toDouble());
-                                              _loadTimeLedgerList();
-                                              setState(() {
-                                                selectedEmotion = null;
-                                                selectedEmotionCategory = null;
-                                                selectedCategory = null;
-                                                contentsController.text = '';
-                                                selectedHour = null;
-                                              });
+                                          ],
+                                        ),
+                                        SizedBox(
+                                          height: 20,
+                                        ),
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.end,
+                                          children: [
+                                            ElevatedButton(
+                                              onPressed: () async {
+                                                _addTimeLedger(
+                                                    selectedEmotion!,
+                                                    selectedEmotionCategory!,
+                                                    selectedCategory!,
+                                                    contentsController.text,
+                                                    selectedHour!.toDouble());
+                                                _loadTimeLedgerList();
+                                                setState(() {
+                                                  selectedEmotion = null;
+                                                  selectedEmotionCategory = null;
+                                                  selectedCategory = null;
+                                                  contentsController.text = '';
+                                                  selectedHour = null;
+                                                });
 
-                                              Navigator.of(context).pop();
-                                            },
-                                            child: Text(
-                                              '추가',
-                                              style: boldStyle.copyWith(
-                                                fontSize: 17,
+                                                Navigator.of(context).pop();
+                                              },
+                                              child: Text(
+                                                '추가',
+                                                style: boldStyle.copyWith(
+                                                  fontSize: 17,
+                                                ),
+                                              ),
+                                              style: ElevatedButton.styleFrom(
+                                                padding: EdgeInsets.symmetric(
+                                                    vertical: 4, horizontal: 24),
+                                                backgroundColor:
+                                                    Color(0xFFDDD9D9),
+                                                shape: RoundedRectangleBorder(
+                                                  borderRadius:
+                                                      BorderRadius.circular(10),
+                                                ),
+                                                tapTargetSize:
+                                                    MaterialTapTargetSize
+                                                        .shrinkWrap,
+                                                // 버튼 크기 줄이기
+                                                minimumSize:
+                                                    Size(0, 36), // 최소 높이 설정
                                               ),
                                             ),
-                                            style: ElevatedButton.styleFrom(
-                                              padding: EdgeInsets.symmetric(
-                                                  vertical: 4, horizontal: 24),
-                                              backgroundColor:
-                                                  Color(0xFFDDD9D9),
-                                              shape: RoundedRectangleBorder(
-                                                borderRadius:
-                                                    BorderRadius.circular(10),
-                                              ),
-                                              tapTargetSize:
-                                                  MaterialTapTargetSize
-                                                      .shrinkWrap,
-                                              // 버튼 크기 줄이기
-                                              minimumSize:
-                                                  Size(0, 36), // 최소 높이 설정
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ],
+                                          ],
+                                        ),
+                                      ],
+                                    ),
                                   ),
-                                ),
-                              ],
+                                ],
+                              ),
                             );
                           });
                         },

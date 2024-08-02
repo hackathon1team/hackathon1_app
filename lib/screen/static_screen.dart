@@ -17,7 +17,6 @@ class StaticScreen extends StatefulWidget {
 }
 
 class _StaticScreenState extends State<StaticScreen> {
-
   @override
   void initState() {
     super.initState();
@@ -26,9 +25,28 @@ class _StaticScreenState extends State<StaticScreen> {
 
   loadStatic() async {
     final nameJwt = BlocProvider.of<NameJwtCubit>(context);
-    await context.read<StaticListCubit>().loadStaticList(nameJwt.state.nameJwt.jwt!);
+    await context
+        .read<StaticListCubit>()
+        .loadStaticList(nameJwt.state.nameJwt.jwt!);
   }
 
+  Widget noData() {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        SizedBox(height: 70,),
+        Text(
+          '데이터가 없습니다.\n우리가 더 친해져볼까요?',
+          style: TextStyle(
+              color: Color(0xFFEAE9E9),
+              fontSize: 20,
+              fontWeight: FontWeight.bold),
+          textAlign: TextAlign.center,
+        ),
+      ],
+    );
+  }
 
   PageController _pageController = PageController();
   int _currentPage = 0;
@@ -59,46 +77,46 @@ class _StaticScreenState extends State<StaticScreen> {
 
   Widget mostTimeChart() {
     return BlocBuilder<StaticListCubit, StaticListCubitState>(
-      builder: (context, state) {
-        final mostTime = state.staticList.timeSpent;
-        return Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            Padding(
-              padding: const EdgeInsets.fromLTRB(20, 50, 20, 0),
-              child: Container(
-                height: 80,
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(60),
-                ),
-                child: Stack(
-                  clipBehavior: Clip.none,
-                  children: [
-                    Positioned(
-                      top: -10,
-                      right: 10,
-                      child: Image.asset(
-                        'assets/components/star.png',
-                        scale: 0.7,
-                      ),
+        builder: (context, state) {
+      final mostTime = state.staticList.timeSpent;
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Padding(
+            padding: const EdgeInsets.fromLTRB(20, 50, 20, 0),
+            child: Container(
+              height: 80,
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(60),
+              ),
+              child: Stack(
+                clipBehavior: Clip.none,
+                children: [
+                  Positioned(
+                    top: -10,
+                    right: 10,
+                    child: Image.asset(
+                      'assets/components/star.png',
+                      scale: 0.7,
                     ),
-                    Center(
-                      child: Text(
-                        '이번 달 내가 가장 많이\n쓴 시간을 살펴볼까요?',
-                        style: TextStyle(
-                          fontSize: 16,
-                          color: Color(0xFF5A639C),
-                          fontWeight: FontWeight.bold,
-                        ),
-                        textAlign: TextAlign.center,
+                  ),
+                  Center(
+                    child: Text(
+                      '이번 달 내가 가장 많이\n쓴 시간을 살펴볼까요?',
+                      style: TextStyle(
+                        fontSize: 16,
+                        color: Color(0xFF5A639C),
+                        fontWeight: FontWeight.bold,
                       ),
-                    )
-                  ],
-                ),
+                      textAlign: TextAlign.center,
+                    ),
+                  )
+                ],
               ),
             ),
-            if(mostTime.isNotEmpty)
+          ),
+          if (mostTime.isNotEmpty)
             Expanded(
               child: PieChart(
                 PieChartData(
@@ -125,10 +143,10 @@ class _StaticScreenState extends State<StaticScreen> {
                 ),
               ),
             ),
-          ],
-        );
-      }
-    );
+          if (mostTime.isEmpty) noData(),
+        ],
+      );
+    });
   }
 
   Widget lastmonthChart() {
@@ -140,20 +158,22 @@ class _StaticScreenState extends State<StaticScreen> {
         charts.Series<ComparisonWithLastMonth, String>(
           id: '지난달 비교',
           colorFn: (_, __) => charts.ColorUtil.fromDartColor(Color(0xFFFFE4A2)),
-          domainFn: (ComparisonWithLastMonth month, _) => '${month.previousMonth}월',
+          domainFn: (ComparisonWithLastMonth month, _) =>
+              '${month.previousMonth}월',
           measureFn: (ComparisonWithLastMonth month, _) => month.previousHours,
           data: [comparison],
           labelAccessorFn: (ComparisonWithLastMonth month, _) =>
-          '${month.previousCategory} ${month.previousHours}시간',
+              '${month.previousCategory} ${month.previousHours}시간',
         ),
         charts.Series<ComparisonWithLastMonth, String>(
           id: '이번달',
           colorFn: (_, __) => charts.ColorUtil.fromDartColor(Color(0xFFFFE4A2)),
-          domainFn: (ComparisonWithLastMonth month, _) => '${month.currentMonth}월',
+          domainFn: (ComparisonWithLastMonth month, _) =>
+              '${month.currentMonth}월',
           measureFn: (ComparisonWithLastMonth month, _) => month.currentHours,
           data: [comparison],
           labelAccessorFn: (ComparisonWithLastMonth month, _) =>
-          '${month.currentCategory} ${month.currentHours}시간',
+              '${month.currentCategory} ${month.currentHours}시간',
         )
       ];
     }
@@ -200,51 +220,56 @@ class _StaticScreenState extends State<StaticScreen> {
                 ),
               ),
               SizedBox(height: 20),
-              if(lastmonth.currentHours != 0)
-              Expanded(
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 20),
-                  child: charts.BarChart(
-                    _createSampleData(),
-                    animate: true,
-                    vertical: false,
-                    defaultRenderer: charts.BarRendererConfig(
-                      cornerStrategy: const charts.ConstCornerStrategy(30),
-                      maxBarWidthPx: 50,
-                      barRendererDecorator: charts.BarLabelDecorator<String>(
-                        insideLabelStyleSpec: charts.TextStyleSpec(
-                          color: charts.MaterialPalette.black,
+              if (lastmonth.currentHours != 0)
+                Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(
+                        vertical: 8.0, horizontal: 20),
+                    child: charts.BarChart(
+                      _createSampleData(),
+                      animate: true,
+                      vertical: false,
+                      defaultRenderer: charts.BarRendererConfig(
+                        cornerStrategy: const charts.ConstCornerStrategy(30),
+                        maxBarWidthPx: 50,
+                        barRendererDecorator: charts.BarLabelDecorator<String>(
+                          insideLabelStyleSpec: charts.TextStyleSpec(
+                            color: charts.MaterialPalette.black,
+                          ),
                         ),
                       ),
-                    ),
-                    domainAxis: charts.OrdinalAxisSpec(
-                      renderSpec: charts.SmallTickRendererSpec(
-                        labelStyle: charts.TextStyleSpec(
-                          color: charts.ColorUtil.fromDartColor(Colors.white),
-                          fontSize: 14,
+                      domainAxis: charts.OrdinalAxisSpec(
+                        renderSpec: charts.SmallTickRendererSpec(
+                          labelStyle: charts.TextStyleSpec(
+                            color: charts.ColorUtil.fromDartColor(Colors.white),
+                            fontSize: 14,
+                          ),
+                          lineStyle: charts.LineStyleSpec(
+                            color: charts.ColorUtil.fromDartColor(
+                                Colors.transparent),
+                            thickness: 0,
+                          ),
                         ),
-                        lineStyle: charts.LineStyleSpec(
-                          color: charts.ColorUtil.fromDartColor(Colors.transparent),
-                          thickness: 0,
-                        ),
+                        showAxisLine: false,
                       ),
-                      showAxisLine: false,
-                    ),
-                    primaryMeasureAxis: charts.NumericAxisSpec(
-                      renderSpec: charts.GridlineRendererSpec(
-                        labelStyle: charts.TextStyleSpec(
-                          color: charts.ColorUtil.fromDartColor(Colors.transparent),
+                      primaryMeasureAxis: charts.NumericAxisSpec(
+                        renderSpec: charts.GridlineRendererSpec(
+                          labelStyle: charts.TextStyleSpec(
+                            color: charts.ColorUtil.fromDartColor(
+                                Colors.transparent),
+                          ),
+                          lineStyle: charts.LineStyleSpec(
+                            color: charts.ColorUtil.fromDartColor(
+                                Colors.transparent),
+                            thickness: 0,
+                          ),
                         ),
-                        lineStyle: charts.LineStyleSpec(
-                          color: charts.ColorUtil.fromDartColor(Colors.transparent),
-                          thickness: 0,
-                        ),
+                        showAxisLine: false,
                       ),
-                      showAxisLine: false,
                     ),
                   ),
                 ),
-              ),
+              if (lastmonth.currentHours == 0) noData(),
             ],
           );
         } else {
@@ -256,51 +281,51 @@ class _StaticScreenState extends State<StaticScreen> {
 
   Widget mostEmojiChart() {
     return BlocBuilder<StaticListCubit, StaticListCubitState>(
-      builder: (context, state) {
-        final emoji = state.staticList.emotionsSummary;
-        return Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            Padding(
-              padding: const EdgeInsets.fromLTRB(20, 50, 20, 0),
-              child: Container(
-                height: 80,
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(60),
-                ),
-                child: Stack(
-                  clipBehavior: Clip.none,
-                  children: [
-                    Positioned(
-                      top: -10,
-                      right: 10,
-                      child: Image.asset(
-                        'assets/components/star.png',
-                        // height: 40,
-                        // width: 40,
-                        scale: 0.7,
-                      ),
+        builder: (context, state) {
+      final emoji = state.staticList.emotionsSummary;
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Padding(
+            padding: const EdgeInsets.fromLTRB(20, 50, 20, 0),
+            child: Container(
+              height: 80,
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(60),
+              ),
+              child: Stack(
+                clipBehavior: Clip.none,
+                children: [
+                  Positioned(
+                    top: -10,
+                    right: 10,
+                    child: Image.asset(
+                      'assets/components/star.png',
+                      // height: 40,
+                      // width: 40,
+                      scale: 0.7,
                     ),
-                    Center(
-                      child: Text(
-                        '이번 달, 내가 가장 많이\n느낀 감정을 확인해 볼까요?',
-                        style: TextStyle(
-                          fontSize: 16,
-                          color: Color(0xFF5A639C),
-                          fontWeight: FontWeight.bold,
-                        ),
-                        textAlign: TextAlign.center,
+                  ),
+                  Center(
+                    child: Text(
+                      '이번 달, 내가 가장 많이\n느낀 감정을 확인해 볼까요?',
+                      style: TextStyle(
+                        fontSize: 16,
+                        color: Color(0xFF5A639C),
+                        fontWeight: FontWeight.bold,
                       ),
+                      textAlign: TextAlign.center,
                     ),
-                  ],
-                ),
+                  ),
+                ],
               ),
             ),
-            SizedBox(
-              height: 20,
-            ),
-            if(emoji.isNotEmpty)
+          ),
+          SizedBox(
+            height: 20,
+          ),
+          if (emoji.isNotEmpty)
             Expanded(
               child: BarChart(
                 BarChartData(
@@ -346,7 +371,8 @@ class _StaticScreenState extends State<StaticScreen> {
                         showTitles: true,
                         getTitlesWidget: (value, meta) {
                           return Text(
-                            state.staticList.emotionsSummary[value.toInt()].type,
+                            state
+                                .staticList.emotionsSummary[value.toInt()].type,
                             style: TextStyle(
                               color: Colors.white,
                               fontWeight: FontWeight.bold,
@@ -365,10 +391,24 @@ class _StaticScreenState extends State<StaticScreen> {
                       if (barTouchResponse != null &&
                           barTouchResponse.spot != null &&
                           event.isInterestedForInteractions) {
-                        final index = barTouchResponse.spot!.touchedBarGroupIndex;
+                        final index =
+                            barTouchResponse.spot!.touchedBarGroupIndex;
+                        final title =
+                            state.staticList.emotionsSummary[index].type;
+                        switch (title) {
+                          case '긍정':
+                            _pageController.jumpToPage(3);
+                            break;
+                          case '중립':
+                            _pageController.jumpToPage(4);
+                            break;
+                          case '부정':
+                            _pageController.jumpToPage(5);
+                            break;
+                        }
                         // final key = mockData2.keys.elementAt(index);
                         // final value = mockData2[key];
-                        _pageController.jumpToPage(index + 3);
+                        // _pageController.jumpToPage(index + 3);
                         // _pageController.animateToPage(index + 2,
                         //     duration: Duration(milliseconds: 300),
                         //     curve: Curves.easeInOut);
@@ -399,10 +439,10 @@ class _StaticScreenState extends State<StaticScreen> {
                 ),
               ),
             ),
-          ],
-        );
-      }
-    );
+          if (emoji.isEmpty) noData(),
+        ],
+      );
+    });
   }
 
   Widget positiveChart() {
@@ -410,14 +450,17 @@ class _StaticScreenState extends State<StaticScreen> {
       final static = BlocProvider.of<StaticListCubit>(context);
 
       if (static.state is LoadedStaticListCubitState) {
-        final positiveEmotions = (static.state as LoadedStaticListCubitState).staticList.positiveEmotions;
+        final positiveEmotions = (static.state as LoadedStaticListCubitState)
+            .staticList
+            .positiveEmotions;
 
         return [
           charts.Series<Emotions, String>(
             id: '긍정적 감정',
-            colorFn: (_, __) => charts.ColorUtil.fromDartColor(Color(0xFFFFE4A2)),
+            colorFn: (_, __) =>
+                charts.ColorUtil.fromDartColor(Color(0xFFFFE4A2)),
             domainFn: (Emotions emotion, _) =>
-            '${emotion.emotion}${positiveEmoji[emotion.emotion]}',
+                '${emotion.emotion}${positiveEmoji[emotion.emotion]}',
             measureFn: (Emotions emotion, _) => emotion.count,
             data: positiveEmotions,
             labelAccessorFn: (Emotions emotion, _) => '${emotion.count}회',
@@ -471,50 +514,55 @@ class _StaticScreenState extends State<StaticScreen> {
               SizedBox(
                 height: 20,
               ),
-              if(positive.isNotEmpty)
-              Expanded(
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 20),
-                  child: charts.BarChart(
-                    _createSampleData(),
-                    animate: true,
-                    vertical: false,
-                    defaultRenderer: charts.BarRendererConfig(
-                      cornerStrategy: const charts.ConstCornerStrategy(30),
-                      barRendererDecorator: charts.BarLabelDecorator<String>(
-                        insideLabelStyleSpec: charts.TextStyleSpec(
-                          color: charts.MaterialPalette.black,
+              if (positive.isNotEmpty)
+                Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(
+                        vertical: 8.0, horizontal: 20),
+                    child: charts.BarChart(
+                      _createSampleData(),
+                      animate: true,
+                      vertical: false,
+                      defaultRenderer: charts.BarRendererConfig(
+                        cornerStrategy: const charts.ConstCornerStrategy(30),
+                        barRendererDecorator: charts.BarLabelDecorator<String>(
+                          insideLabelStyleSpec: charts.TextStyleSpec(
+                            color: charts.MaterialPalette.black,
+                          ),
                         ),
                       ),
-                    ),
-                    domainAxis: charts.OrdinalAxisSpec(
-                      renderSpec: charts.SmallTickRendererSpec(
-                        labelStyle: charts.TextStyleSpec(
-                          color: charts.ColorUtil.fromDartColor(Colors.white),
-                          fontSize: 14,
+                      domainAxis: charts.OrdinalAxisSpec(
+                        renderSpec: charts.SmallTickRendererSpec(
+                          labelStyle: charts.TextStyleSpec(
+                            color: charts.ColorUtil.fromDartColor(Colors.white),
+                            fontSize: 14,
+                          ),
+                          lineStyle: charts.LineStyleSpec(
+                            color: charts.ColorUtil.fromDartColor(
+                                Colors.transparent),
+                            thickness: 0,
+                          ),
                         ),
-                        lineStyle: charts.LineStyleSpec(
-                          color: charts.ColorUtil.fromDartColor(Colors.transparent),
-                          thickness: 0,
-                        ),
+                        showAxisLine: false,
                       ),
-                      showAxisLine: false,
-                    ),
-                    primaryMeasureAxis: charts.NumericAxisSpec(
-                      renderSpec: charts.GridlineRendererSpec(
-                        labelStyle: charts.TextStyleSpec(
-                          color: charts.ColorUtil.fromDartColor(Colors.transparent),
+                      primaryMeasureAxis: charts.NumericAxisSpec(
+                        renderSpec: charts.GridlineRendererSpec(
+                          labelStyle: charts.TextStyleSpec(
+                            color: charts.ColorUtil.fromDartColor(
+                                Colors.transparent),
+                          ),
+                          lineStyle: charts.LineStyleSpec(
+                            color: charts.ColorUtil.fromDartColor(
+                                Colors.transparent),
+                            thickness: 0,
+                          ),
                         ),
-                        lineStyle: charts.LineStyleSpec(
-                          color: charts.ColorUtil.fromDartColor(Colors.transparent),
-                          thickness: 0,
-                        ),
+                        showAxisLine: false,
                       ),
-                      showAxisLine: false,
                     ),
                   ),
                 ),
-              ),
+              if (positive.isEmpty) noData(),
             ],
           );
         } else {
@@ -529,14 +577,17 @@ class _StaticScreenState extends State<StaticScreen> {
       final static = BlocProvider.of<StaticListCubit>(context);
 
       if (static.state is LoadedStaticListCubitState) {
-        final neutralEmotions = (static.state as LoadedStaticListCubitState).staticList.neutralEmotions;
+        final neutralEmotions = (static.state as LoadedStaticListCubitState)
+            .staticList
+            .neutralEmotions;
 
         return [
           charts.Series<Emotions, String>(
             id: '중립적 감정',
-            colorFn: (_, __) => charts.ColorUtil.fromDartColor(Color(0xFFFFE4A2)),
+            colorFn: (_, __) =>
+                charts.ColorUtil.fromDartColor(Color(0xFFFFE4A2)),
             domainFn: (Emotions emotion, _) =>
-            '${emotion.emotion}${neutralEmoji[emotion.emotion]}',
+                '${emotion.emotion}${neutralEmoji[emotion.emotion]}',
             measureFn: (Emotions emotion, _) => emotion.count,
             data: neutralEmotions,
             labelAccessorFn: (Emotions emotion, _) => '${emotion.count}회',
@@ -590,50 +641,55 @@ class _StaticScreenState extends State<StaticScreen> {
               SizedBox(
                 height: 20,
               ),
-              if(neutral.isNotEmpty)
-              Expanded(
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 20),
-                  child: charts.BarChart(
-                    _createSampleData(),
-                    animate: true,
-                    vertical: false,
-                    defaultRenderer: charts.BarRendererConfig(
-                      cornerStrategy: const charts.ConstCornerStrategy(30),
-                      barRendererDecorator: charts.BarLabelDecorator<String>(
-                        insideLabelStyleSpec: charts.TextStyleSpec(
-                          color: charts.MaterialPalette.black,
+              if (neutral.isNotEmpty)
+                Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(
+                        vertical: 8.0, horizontal: 20),
+                    child: charts.BarChart(
+                      _createSampleData(),
+                      animate: true,
+                      vertical: false,
+                      defaultRenderer: charts.BarRendererConfig(
+                        cornerStrategy: const charts.ConstCornerStrategy(30),
+                        barRendererDecorator: charts.BarLabelDecorator<String>(
+                          insideLabelStyleSpec: charts.TextStyleSpec(
+                            color: charts.MaterialPalette.black,
+                          ),
                         ),
                       ),
-                    ),
-                    domainAxis: charts.OrdinalAxisSpec(
-                      renderSpec: charts.SmallTickRendererSpec(
-                        labelStyle: charts.TextStyleSpec(
-                          color: charts.ColorUtil.fromDartColor(Colors.white),
-                          fontSize: 14,
+                      domainAxis: charts.OrdinalAxisSpec(
+                        renderSpec: charts.SmallTickRendererSpec(
+                          labelStyle: charts.TextStyleSpec(
+                            color: charts.ColorUtil.fromDartColor(Colors.white),
+                            fontSize: 14,
+                          ),
+                          lineStyle: charts.LineStyleSpec(
+                            color: charts.ColorUtil.fromDartColor(
+                                Colors.transparent),
+                            thickness: 0,
+                          ),
                         ),
-                        lineStyle: charts.LineStyleSpec(
-                          color: charts.ColorUtil.fromDartColor(Colors.transparent),
-                          thickness: 0,
-                        ),
+                        showAxisLine: false,
                       ),
-                      showAxisLine: false,
-                    ),
-                    primaryMeasureAxis: charts.NumericAxisSpec(
-                      renderSpec: charts.GridlineRendererSpec(
-                        labelStyle: charts.TextStyleSpec(
-                          color: charts.ColorUtil.fromDartColor(Colors.transparent),
+                      primaryMeasureAxis: charts.NumericAxisSpec(
+                        renderSpec: charts.GridlineRendererSpec(
+                          labelStyle: charts.TextStyleSpec(
+                            color: charts.ColorUtil.fromDartColor(
+                                Colors.transparent),
+                          ),
+                          lineStyle: charts.LineStyleSpec(
+                            color: charts.ColorUtil.fromDartColor(
+                                Colors.transparent),
+                            thickness: 0,
+                          ),
                         ),
-                        lineStyle: charts.LineStyleSpec(
-                          color: charts.ColorUtil.fromDartColor(Colors.transparent),
-                          thickness: 0,
-                        ),
+                        showAxisLine: false,
                       ),
-                      showAxisLine: false,
                     ),
                   ),
                 ),
-              ),
+              if (neutral.isEmpty) noData(),
             ],
           );
         } else {
@@ -648,14 +704,17 @@ class _StaticScreenState extends State<StaticScreen> {
       final static = BlocProvider.of<StaticListCubit>(context);
 
       if (static.state is LoadedStaticListCubitState) {
-        final negativeEmotions = (static.state as LoadedStaticListCubitState).staticList.negativeEmotions;
+        final negativeEmotions = (static.state as LoadedStaticListCubitState)
+            .staticList
+            .negativeEmotions;
 
         return [
           charts.Series<Emotions, String>(
             id: '부정적 감정',
-            colorFn: (_, __) => charts.ColorUtil.fromDartColor(Color(0xFFFFE4A2)),
+            colorFn: (_, __) =>
+                charts.ColorUtil.fromDartColor(Color(0xFFFFE4A2)),
             domainFn: (Emotions emotion, _) =>
-            '${emotion.emotion}${negativeEmoji[emotion.emotion]}',
+                '${emotion.emotion}${negativeEmoji[emotion.emotion]}',
             measureFn: (Emotions emotion, _) => emotion.count,
             data: negativeEmotions,
             labelAccessorFn: (Emotions emotion, _) => '${emotion.count}회',
@@ -709,50 +768,55 @@ class _StaticScreenState extends State<StaticScreen> {
               SizedBox(
                 height: 20,
               ),
-              if(negative.isNotEmpty)
-              Expanded(
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 20),
-                  child: charts.BarChart(
-                    _createSampleData(),
-                    animate: true,
-                    vertical: false,
-                    defaultRenderer: charts.BarRendererConfig(
-                      cornerStrategy: const charts.ConstCornerStrategy(30),
-                      barRendererDecorator: charts.BarLabelDecorator<String>(
-                        insideLabelStyleSpec: charts.TextStyleSpec(
-                          color: charts.MaterialPalette.black,
+              if (negative.isNotEmpty)
+                Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(
+                        vertical: 8.0, horizontal: 20),
+                    child: charts.BarChart(
+                      _createSampleData(),
+                      animate: true,
+                      vertical: false,
+                      defaultRenderer: charts.BarRendererConfig(
+                        cornerStrategy: const charts.ConstCornerStrategy(30),
+                        barRendererDecorator: charts.BarLabelDecorator<String>(
+                          insideLabelStyleSpec: charts.TextStyleSpec(
+                            color: charts.MaterialPalette.black,
+                          ),
                         ),
                       ),
-                    ),
-                    domainAxis: charts.OrdinalAxisSpec(
-                      renderSpec: charts.SmallTickRendererSpec(
-                        labelStyle: charts.TextStyleSpec(
-                          color: charts.ColorUtil.fromDartColor(Colors.white),
-                          fontSize: 14,
+                      domainAxis: charts.OrdinalAxisSpec(
+                        renderSpec: charts.SmallTickRendererSpec(
+                          labelStyle: charts.TextStyleSpec(
+                            color: charts.ColorUtil.fromDartColor(Colors.white),
+                            fontSize: 14,
+                          ),
+                          lineStyle: charts.LineStyleSpec(
+                            color: charts.ColorUtil.fromDartColor(
+                                Colors.transparent),
+                            thickness: 0,
+                          ),
                         ),
-                        lineStyle: charts.LineStyleSpec(
-                          color: charts.ColorUtil.fromDartColor(Colors.transparent),
-                          thickness: 0,
-                        ),
+                        showAxisLine: false,
                       ),
-                      showAxisLine: false,
-                    ),
-                    primaryMeasureAxis: charts.NumericAxisSpec(
-                      renderSpec: charts.GridlineRendererSpec(
-                        labelStyle: charts.TextStyleSpec(
-                          color: charts.ColorUtil.fromDartColor(Colors.transparent),
+                      primaryMeasureAxis: charts.NumericAxisSpec(
+                        renderSpec: charts.GridlineRendererSpec(
+                          labelStyle: charts.TextStyleSpec(
+                            color: charts.ColorUtil.fromDartColor(
+                                Colors.transparent),
+                          ),
+                          lineStyle: charts.LineStyleSpec(
+                            color: charts.ColorUtil.fromDartColor(
+                                Colors.transparent),
+                            thickness: 0,
+                          ),
                         ),
-                        lineStyle: charts.LineStyleSpec(
-                          color: charts.ColorUtil.fromDartColor(Colors.transparent),
-                          thickness: 0,
-                        ),
+                        showAxisLine: false,
                       ),
-                      showAxisLine: false,
                     ),
                   ),
                 ),
-              ),
+              if (negative.isEmpty) noData(),
             ],
           );
         } else {
@@ -761,8 +825,6 @@ class _StaticScreenState extends State<StaticScreen> {
       },
     );
   }
-
-
 
   @override
   Widget build(BuildContext context) {
@@ -856,5 +918,3 @@ class _StaticScreenState extends State<StaticScreen> {
     );
   }
 }
-
-
