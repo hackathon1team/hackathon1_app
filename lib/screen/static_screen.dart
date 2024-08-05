@@ -30,6 +30,21 @@ class _StaticScreenState extends State<StaticScreen> {
         .loadStaticList(nameJwt.state.nameJwt.jwt!);
   }
 
+  String abbreviateText(String text, int maxLength) {
+    if (text.length <= maxLength) return text;
+    return '${text.substring(0, maxLength - 3)}...';
+  }
+
+  double getFontSize(double value) {
+    if(value < 20) return 8;
+    if(value < 40) return 10;
+    return 12;
+  }
+  String wrapText(String text, int maxLength) {
+    if (text.length <= maxLength) return text;
+    return '${text.substring(0, maxLength)}\n${text.substring(maxLength)}';
+  }
+
   Widget noData() {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
@@ -52,7 +67,7 @@ class _StaticScreenState extends State<StaticScreen> {
   int _currentPage = 0;
 
   void _nextPage() {
-    if (_pageController.hasClients && _currentPage < 4) {
+    if (_pageController.hasClients && _currentPage < 5) {
       _pageController.nextPage(
         duration: Duration(milliseconds: 300),
         curve: Curves.easeInOut,
@@ -73,6 +88,24 @@ class _StaticScreenState extends State<StaticScreen> {
   void dispose() {
     _pageController.dispose();
     super.dispose();
+  }
+
+  List<EmotionsSummary> sortEmotions(List<EmotionsSummary> emoji) {
+    // 정렬 순서 정의
+    final orderMap = {
+      "긍정": 0,
+      "중립": 1,
+      "부정": 2,
+    };
+
+    // 리스트 정렬
+    emoji.sort((a, b) {
+      int orderA = orderMap[a.type] ?? 3; // 정의되지 않은 타입은 맨 뒤로
+      int orderB = orderMap[b.type] ?? 3;
+      return orderA.compareTo(orderB);
+    });
+
+    return emoji;
   }
 
   Widget mostTimeChart() {
@@ -127,13 +160,14 @@ class _StaticScreenState extends State<StaticScreen> {
                       return PieChartSectionData(
                         radius: MediaQuery.of(context).size.width / 4,
                         color: PieChartColor[index],
-                        value: item.percentage.toDouble(),
-                        title: '${item.category}\n${item.hours}시간',
+                        value: item.percentage,
+                        title: '${abbreviateText(item.category, 10)}\n${item.hours.toInt()}시간',
                         titleStyle: TextStyle(
-                          fontSize: 12,
+                          fontSize: getFontSize(item.percentage),
                           color: Colors.white.withOpacity(0.53),
                           fontWeight: FontWeight.w600,
                         ),
+                        titlePositionPercentageOffset: item.category.length > 10 ? 0.6 : 0.5
                       );
                     },
                   ),
@@ -282,7 +316,7 @@ class _StaticScreenState extends State<StaticScreen> {
   Widget mostEmojiChart() {
     return BlocBuilder<StaticListCubit, StaticListCubitState>(
         builder: (context, state) {
-      final emoji = state.staticList.emotionsSummary;
+      final emoji = sortEmotions(state.staticList.emotionsSummary);
       return Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
@@ -330,9 +364,9 @@ class _StaticScreenState extends State<StaticScreen> {
               child: BarChart(
                 BarChartData(
                   barGroups: List.generate(
-                    state.staticList.emotionsSummary.length,
+                    emoji.length,
                     (index) {
-                      final item = state.staticList.emotionsSummary[index];
+                      final item = emoji[index];
                       return BarChartGroupData(
                         x: index,
                         barRods: [
@@ -371,8 +405,7 @@ class _StaticScreenState extends State<StaticScreen> {
                         showTitles: true,
                         getTitlesWidget: (value, meta) {
                           return Text(
-                            state
-                                .staticList.emotionsSummary[value.toInt()].type,
+                            emoji[value.toInt()].type,
                             style: TextStyle(
                               color: Colors.white,
                               fontWeight: FontWeight.bold,
@@ -394,7 +427,7 @@ class _StaticScreenState extends State<StaticScreen> {
                         final index =
                             barTouchResponse.spot!.touchedBarGroupIndex;
                         final title =
-                            state.staticList.emotionsSummary[index].type;
+                            emoji[index].type;
                         switch (title) {
                           case '긍정':
                             _pageController.jumpToPage(3);
@@ -885,7 +918,7 @@ class _StaticScreenState extends State<StaticScreen> {
                 ),
               ],
             ),
-            if (_currentPage < 4)
+            if (_currentPage < 5)
               Align(
                 alignment: Alignment.bottomCenter,
                 child: IconButton(
