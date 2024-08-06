@@ -2,9 +2,9 @@
 <img width="100" alt="image" src="https://github.com/user-attachments/assets/07302534-3d52-4054-b26e-b21425663447">
 </p>
 
-<div align="middle">
+<h2 align="middle">
 나를 메모하다. 메모리
-</div>
+</h2>
 <br/>
 
 ---
