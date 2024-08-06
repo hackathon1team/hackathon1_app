@@ -7,7 +7,6 @@ import 'package:memory_app/cubit/name_jwt_cubit.dart';
 import 'package:memory_app/cubit/static_list_cubit.dart';
 import 'package:memory_app/screen/components/navigation_service.dart';
 import 'package:memory_app/screen/login_screen.dart';
-import 'package:memory_app/screen/home_screen.dart';
 
 import 'cubit/time_ledger_list_cubit.dart';
 

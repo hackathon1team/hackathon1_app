@@ -40,22 +40,8 @@ class _LoginScreenState extends State<LoginScreen> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        'LOGIN',
-                        style: TextStyle(
-                            fontSize: 32,
-                            color: Colors.white,
-                            fontWeight: FontWeight.w600),
-                      ),
-                      Image.asset('assets/character/character1.png'),
-                    ],
-                  ),
-                  SizedBox(
-                    height: 40,
-                  ),
+                  Image.asset('assets/logo/logo.png'),
+
                   TextField(
                     controller: idController,
                     style: TextStyle(
